@@ -1,0 +1,56 @@
+{% extends "base.html.twig" %}
+
+{% block title %}{{title}}{% endblock %}
+{% block head %}
+    {{ parent() }}
+    <style type="text/css">
+    
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="grid-container">
+       <div class="grid-x">
+           <div class="cell">
+               <h1>{{title}}</h1>
+           </div>
+           <div class="cell">
+               <nav>
+                    <ul>
+                        <li><a href="{{home~'admin'}}">admin</a></li>
+                        <li><a href="{{home~'admin/create'}}">créer</a></li>
+                        <li><a href="{{home~'admin/post'}}">posts</a></li>
+                        <li><a href="{{home~'admin/astuce'}}">astuces</a></li>
+                    </ul>
+                </nav>
+           </div>
+           <div class="cell">
+                <table>
+                  <thead>
+                    <tr>
+                      <th width="200">Titre</th>
+                      <th width="150">type</th>
+                      <th width="150">catégorie</th>
+                      <th width="150">editer</th>
+                      <th width="">voir</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                   {%for post in posts%}
+                    <tr>
+                      <td>{{post.post_title}}</td>
+                      <td>{{post.post_type}}</td>
+                      <td>{{post.cat_name}}</td>
+                      <td><a href="{{home~'admin/'~post.post_id~'/edit'}}" class="button small">editer</a></td>
+                      <td><a href="{{home~'post/'~post.post_id}}" class="button small">voir</a></td>
+                    </tr>
+                    {%endfor%}
+                  </tbody>
+                </table>   
+           </div>           
+       </div>       
+   </div>    
+{% endblock %}
+{% block scripts %}
+    {{ parent() }}
+    
+{% endblock %}

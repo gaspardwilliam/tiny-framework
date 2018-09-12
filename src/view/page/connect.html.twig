@@ -1,0 +1,49 @@
+{% extends "base.html.twig" %}
+
+{% block title %}{{title}}{% endblock %}
+{% block head %}
+    {{ parent() }}
+    <style type="text/css">
+    
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="grid-container">
+       <div class="grid-x">
+           <div class="cell">
+               <h1>{{title}}</h1>
+           </div>
+           <div class="cell">
+                <form method="post">
+                   {% if error %}
+                       <div class="callout alert">
+                          <h5>Erreur</h5>
+                          <p>{{ error.login }}</p>   
+                          
+                        </div>
+                      
+                    {% endif %}                 
+                    <div class="grid-x grid-margin-x">
+                      <div class="medium-6 cell">
+                        <label>email
+                            <input type="email" name="email" value="{{email}}">
+                        </label>
+                      </div>
+                      <div class="medium-6 cell">
+                        <label>password
+                            <input type="password" name="password" value="">
+                        </label>
+                      </div>
+                      <div class="cell">
+                             <input type="submit" class="button">
+                      </div>
+                    </div>
+                </form>
+           </div>           
+       </div>       
+    </div> 
+{% endblock %}
+{% block scripts %}
+    {{ parent() }}
+    
+{% endblock %}

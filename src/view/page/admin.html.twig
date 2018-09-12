@@ -1,0 +1,33 @@
+{% extends "base.html.twig" %}
+
+{% block title %}{{title}}{% endblock %}
+{% block head %}
+    {{ parent() }}
+    <style type="text/css">
+    
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="grid-container">
+       <div class="grid-x">
+           <div class="cell">
+               <h1>{{title}}</h1>
+           </div>
+           <div class="cell">
+               <nav>
+                    <ul>
+                        <li><a href="{{home~'admin'}}">admin</a></li>
+                        <li><a href="{{home~'admin/create'}}">créer</a></li>
+                        <li><a href="{{home~'admin/post'}}">posts</a></li>
+                        <li><a href="{{home~'admin/astuce'}}">astuces</a></li>
+                    </ul>
+                </nav>
+           </div>
+                   
+       </div>       
+   </div>    
+{% endblock %}
+{% block scripts %}
+    {{ parent() }}
+    
+{% endblock %}

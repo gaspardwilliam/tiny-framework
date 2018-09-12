@@ -1,0 +1,19 @@
+{
+    "name": "william/altorouter",
+    "authors": [
+        {
+            "name": "William",
+            "email": "gaspardwilliam@gmail.com"
+        }
+    ],
+    "require": {
+        "altorouter/altorouter": "1.1.0",
+        "twig/twig": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "William\\Controller\\": "src/controller/",
+            "William\\Model\\": "src/model/"
+        }
+    }
+}
