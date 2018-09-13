@@ -14,6 +14,7 @@ $twig = new Twig_Environment($loader, array(
 ));
 $twig->addGlobal('home', SITE_URL);
 $twig->addGlobal('assets', ASSETS);
+$twig->addGlobal('posts_type', $posts_type);
 
 
 
@@ -27,34 +28,6 @@ $router->map('GET', '/', function() {
     $ctrl->index();//appelle la methode index() de la class DefaultController
     
 },'home');
-
-//liste des posts
-$router->map('GET', '/posts', function() {
-	$ctrl=new DefaultController;
-    $ctrl->posts('post');
-},'posts');
-
-//liste des posts
-$router->map('GET', '/astuces', function() {
-	$ctrl=new DefaultController;
-    $ctrl->posts('astuce');
-},'astuces');
-
-
-/*//liste des posts
-$router->map('GET', '/[a:type]', function($type) { 
-	$ctrl=new DefaultController;
-    $ctrl->posts($type);
-},'archive');*/
-
-
-
-
-//affiche un post
-$router->map('GET', '/post/[i:id]', function($id) {    
-	$ctrl=new DefaultController;
-    $ctrl->postid($id);
-},'post');
 
 
 //page de connexion
@@ -75,6 +48,18 @@ $router->map('GET', '/admin', function() {
     $ctrl->admin();
 },'admin');
 
+//liste des posts d'un type de contenu
+$router->map('GET', '/[a:type]', function($type) {
+	$ctrl=new DefaultController;
+    $ctrl->posts($type);
+},'posts');
+
+
+//affiche un post
+$router->map('GET', '/post/[i:id]', function($id) {    
+	$ctrl=new DefaultController;
+    $ctrl->postid($id);
+},'post');
 
 
 //page admin création d'un post
@@ -105,8 +90,6 @@ $router->map('GET|POST', '/admin/[:id]/delete', function($id) {
 
 
 $match = $router->match();
-
-
 
 
 // call closure or throw 404 status

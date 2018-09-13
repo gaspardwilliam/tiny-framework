@@ -13,11 +13,23 @@ define('ASSETS', SITE_URL.'public/');
 $posts_type=array(
     array(
         'slug'=>'posts',
-        'name'=>'post'
+        'singular_name'=>'post',
+        'plural_name'=>'posts'
     ),
     array(
         'slug'=>'astuces',
-        'name'=>'astuce'
+        'singular_name'=>'astuce',
+        'plural_name'=>'astuces'
+    ),
+     array(
+        'slug'=>'recettes',
+        'singular_name'=>'recette',
+        'plural_name'=>'recettes'
+    ),    
+     array(
+        'slug'=>'jeux',
+        'singular_name'=>'jeu',
+        'plural_name'=>'jeux'
     ),
 
 );

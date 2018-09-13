@@ -1,4 +1,4 @@
-{% extends "base.html.twig" %}
+{% extends "dashboard.html.twig" %}
 
 {% block title %}{{title}}{% endblock %}
 {% block head %}
@@ -13,16 +13,7 @@
            <div class="cell">
                <h1>{{title}}</h1>
            </div>
-           <div class="cell">
-               <nav>
-                    <ul>
-                        <li><a href="{{home~'admin'}}">admin</a></li>
-                        <li><a href="{{home~'admin/create'}}">créer</a></li>
-                        <li><a href="{{home~'admin/post'}}">posts</a></li>
-                        <li><a href="{{home~'admin/astuce'}}">astuces</a></li>
-                    </ul>
-                </nav>
-           </div>
+           
            <div class="cell">
                 <table>
                   <thead>

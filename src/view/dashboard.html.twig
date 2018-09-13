@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    {% block head %}
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+        <title>{% block title %}{% endblock %} - My site</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.5.0-rc.2/dist/css/foundation.min.css" integrity="sha256-iJQ8dZac/jUYHxiEnZJsyVpKcdq2sQvdA7t02QFmp30= sha384-SplqNBo/0ZlvSdwrP/riIPDozO5ck8+yIm++KVqyMAC53S6m3BaV+2OLpi7ULOOh sha512-ho6hK4sAWdCeqopNZWNy1d9Ok2hzfTLQLcGSr8ZlRzDzh6tNHkVoqSl6wgLsqls3yazwiG9H9dBCtSfPuiLRCQ==" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{assets}}css/style.css" />
+        <link rel="stylesheet" href="{{assets}}css/dashboard.css" />
+    {% endblock %}   
+</head>
+<body>
+   <div class="app-dashboard shrink-medium">
+      <div class="row expanded app-dashboard-top-nav-bar align-justify">
+        <div class="columns medium-2">
+          <button data-toggle="app-dashboard-sidebar" class="menu-icon hide-for-medium"></button>
+          <a href="{{home}}" class="app-dashboard-logo">Le Site</a>
+        </div>        
+        <div class="columns shrink app-dashboard-top-bar-actions">
+          <a href="{{home}}deco" class="button ">Logout</a>          
+        </div>
+      </div>
+
+      <div class="app-dashboard-body off-canvas-wrapper">
+        <div id="app-dashboard-sidebar" class="app-dashboard-sidebar position-left off-canvas off-canvas-absolute reveal-for-medium" data-off-canvas>
+          <div class="app-dashboard-sidebar-title-area">
+            <div class="app-dashboard-close-sidebar">
+              <h3 class="app-dashboard-sidebar-block-title">Items</h3>
+              <!-- Close button -->
+              <button id="close-sidebar" data-app-dashboard-toggle-shrink class="app-dashboard-sidebar-close-button show-for-medium" aria-label="Close menu" type="button">
+                <span aria-hidden="true"><a href="#"><i class="large fa fa-angle-double-left"></i></a></span>
+              </button>
+            </div>
+            <div class="app-dashboard-open-sidebar">
+              <button id="open-sidebar" data-app-dashboard-toggle-shrink class="app-dashboard-open-sidebar-button show-for-medium" aria-label="open menu" type="button">
+                <span aria-hidden="true"><a href="#"><i class="large fa fa-angle-double-right"></i></a></span>
+              </button>
+            </div>
+          </div>
+          <div class="app-dashboard-sidebar-inner">
+            <ul class="menu vertical">
+              <li><a href="{{home}}admin" class="is-active">
+                <i class="large fa fa-home"></i><span class="app-dashboard-sidebar-text">Admin</span>
+              </a></li>
+              <li><a href="{{home}}admin/create" class="is-active">
+                <i class="large fa fa-plus-circle"></i><span class="app-dashboard-sidebar-text">Créer</span>
+              </a></li>               
+              {% for post_type in posts_type%}
+              <li><a href="{{home~'admin/'~post_type.slug}}">
+                <i class="large fa fas fa-folder"></i><span class="app-dashboard-sidebar-text">{{post_type.plural_name}}</span>
+              </a></li>
+              {%endfor%}
+              <!--<li><a>
+                <i class="large fa fas fa-folder"></i><span class="app-dashboard-sidebar-text">Astuces</span>
+              </a></li>
+              <li><a>
+                <i class="large fa fas fa-folder"></i><span class="app-dashboard-sidebar-text">Recettes</span>
+              </a></li>-->
+            </ul>
+          </div>
+        </div>
+
+        <div class="app-dashboard-body-content off-canvas-content" data-off-canvas-content>
+          <h2 class="text-center">Administration</h2>
+          <div id="content">{% block content %}{% endblock %}</div>
+
+
+        </div>
+      </div>
+    </div>
+
+
+   
+   <footer>
+        {% block footer %}
+                &copy; Copyright 2018 by you.
+        {% endblock %}
+   </footer>
+    {% block scripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.5.0-rc.2/dist/js/foundation.min.js" integrity="sha256-G6jsRyH1fxbsvFIXSCuwYmI1aIDYBa28xscrvmYjJy0= sha384-vtoG68NvPc9azmFJr447vvY8qgdyA4FdaJ5/bqvzIM4eAdZfO0iyRRF8l2AAscYI sha512-43seCcNrHA0BQgrtyajB9sp8yOdv5c8QdYvgjP7zJ7v+dmzAcxYDQ2gupb9aztsNWBq1COIp/3NHYkQs4l/dkg==" crossorigin="anonymous"></script>
+    <script src="{{assets}}js/dashboard.js"></script>
+    <script>
+      $(document).foundation();
+    </script>
+
+    {% endblock %}    
+</body>
+</html>

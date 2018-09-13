@@ -28,11 +28,16 @@ class DefaultController
         echo $this->twig->render('page/index.html.twig', array('title' => 'Accueil'));//appelle la vue twig
     }
     
-    public function posts($type)
-    {   
-    $postmod=new PostManager;
-    $data=$postmod->fetchAll($type);   
-     echo $this->twig->render('page/posts.html.twig', array('title' => 'posts','posts'=>$data));
+    public function posts($slug)
+    { 
+    $key = array_search($slug, array_column($this->posts_type, 'slug'));
+    if(!empty($key)|$key===0){
+       $postmod=new PostManager;
+       $data=$postmod->fetchAll($this->posts_type[$key]['singular_name']);
+        echo $this->twig->render('page/posts.html.twig', array('title' => $slug,'posts'=>$data));
+    }else{
+        echo $this->twig->render('page/404.html.twig', array('title' => '404'));
+    }
     }
     
     public function postid($id)
@@ -55,12 +60,18 @@ class DefaultController
      echo $this->twig->render('page/admin.html.twig', array('title' => 'administration'));
     }
     
-    public function admin_type($type)
-    {        
-    $postmod=new PostManager;
-    $data=$postmod->fetchAll($type);
-     echo $this->twig->render('page/admin_type.html.twig', array('title' => 'administration '.$type,'posts'=>$data));
+    public function admin_type($slug)
+    { 
+    $key = array_search($slug, array_column($this->posts_type, 'slug'));
+    if(!empty($key)|$key===0){
+       $postmod=new PostManager;
+       $data=$postmod->fetchAll($this->posts_type[$key]['singular_name']);
+       echo $this->twig->render('page/admin_type.html.twig', array('title' => 'administration '.$slug,'posts'=>$data));
+    }else{
+        echo $this->twig->render('page/404.html.twig', array('title' => '404'));
+    } 
     }
+    
     
     
     

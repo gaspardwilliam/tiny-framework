@@ -1,4 +1,4 @@
-{% extends "base.html.twig" %}
+{% extends "dashboard.html.twig" %}
 
 {% block title %}{{title}}{% endblock %}
 {% block head %}
@@ -20,7 +20,7 @@
                             <label>type
                                 <select name='type'>
                                    {% for tip in tips %}                                   
-                                   <option value="{{tip.name}}" {%if post.type == tip.name %}selected{%endif%}>{{tip.slug}}</option>
+                                   <option value="{{tip.singular_name}}" {%if post.type == tip.singular_name %}selected{%endif%}>{{tip.plural_name}}</option>
                                    {% endfor%}                      
                                 </select>
                             </label>                          
