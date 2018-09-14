@@ -30,6 +30,11 @@ $posts_type=array(
         'slug'=>'chutes',
         'singular_name'=>'chute',
         'plural_name'=>'chutes'
+    ),
+    array(
+        'slug'=>'azes',
+        'singular_name'=>'aze',
+        'plural_name'=>'azes'
     )
      
 

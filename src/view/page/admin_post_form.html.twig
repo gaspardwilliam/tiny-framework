@@ -17,35 +17,32 @@
            <div class="cell">
                 <form method="post">                                   
                     <div class="grid-x grid-margin-x">
-                     <div class="cell">
-                            <label>type
-                                <select name='type'>
-                                   {% for tip in tips %}                                   
-                                   <option value="{{tip.singular_name}}" {%if post.type == tip.singular_name %}selected{%endif%}>{{tip.plural_name}}</option>
-                                   {% endfor%}                      
-                                </select>
-                            </label>                          
-                      </div>
+                     
                       <div class="medium-6 cell">
                         <label>titre
                             <input type="text" name="title" value="{{post.title}}">
                         </label>
                       </div>
-                      <div class="medium-6 cell">
-                        <label>contenu
-                            <textarea name="content">{{post.content}}</textarea>
-                        </label>
-                      </div>                     
+                                           
                       <div class="medium-6 cell">
                             <label>Catégorie
                                 <select name='cat_id'>
+                                    <option value="0">aucune</option>
                                    {% for category in categories %}                                   
                                    <option value="{{category.cat_id}}" {%if post.cat_id == category.cat_id %}selected{%endif%}>{{category.cat_name}}</option>
                                    {% endfor%}                      
                                 </select>
                             </label>                          
                       </div>
-                      {%if post.id%}
+                      
+                    </div>
+                    <div class="grid-x grid-margin-x">
+                        <div class="medium-6 cell">
+                            <label>contenu
+                                <textarea name="content">{{post.content}}</textarea>
+                            </label>
+                        </div>
+                        {%if post.id%}
                       <div class="cell">
                             <a href="{{home~'admin/'~post.id~'/delete'}}" class="button small alert">supprimer</a>  
                       </div>
@@ -63,6 +60,30 @@
     {{ parent() }}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/simplemde/1.11.2/simplemde.min.js"></script>
     <script>
-        var simplemde = new SimpleMDE();
+        var simplemde = new SimpleMDE({
+            autoDownloadFontAwesome:false,
+            spellChecker: false,
+            toolbar: [{
+                name: "bold",
+                action: SimpleMDE.toggleBold,
+                className: "fas fa-bold",
+                title: "Bold",
+            },
+            {
+                name: "italic",
+                action: SimpleMDE.toggleItalic,
+                className: "fa fa-italic",
+                title: "Bold",
+            },
+            "|",
+            {
+                name: "heading",
+                action: SimpleMDE.toggleHeadingSmaller,
+                className: "fa fa-heading",
+                title: "Bold",
+            }
+            
+        ],
+        });
     </script>
 {% endblock %}

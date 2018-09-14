@@ -15,27 +15,23 @@
            </div>
            
            <div class="cell">
-               <a href="{{home~'admin/'~post_type~'/create'}}" class="float-right"><i class="fa-3x fas fa-plus-circle"></i>
-                
+                <a href="{{home~'admin/category/create'}}" class="float-right"><i class="fa-3x fas fa-plus-circle"></i>                
                 </a>
                 <table>
                   <thead>
                     <tr>
-                      <th width="200">Titre</th>
-                      <th width="150">type</th>
-                      <th width="150">catégorie</th>
-                      <th width="150">editer</th>
-                      <th width="">voir</th>
+                      <th width="200">id</th>
+                      <th width="200">Nom</th>
+                      <th width="200">modifier</th>
+                      
                     </tr>
                   </thead>
                   <tbody>
-                   {%for post in posts%}
+                   {%for cat in categories%}
                     <tr>
-                      <td>{{post.post_title}}</td>
-                      <td>{{post.post_type}}</td>
-                      <td>{{post.cat_name}}</td>
-                      <td><a href="{{home~'admin/'~post.post_id~'/edit'}}" class="button small">editer</a></td>
-                      <td><a href="{{home~'post/'~post.post_id}}" class="button small">voir</a></td>
+                      <td>{{cat.cat_id}}</td>                      
+                      <td>{{cat.cat_name}}</td>                      
+                      <td><a href="{{home~'admin/category/'~cat.cat_id}}" class="button small">editer</a></td>                      
                     </tr>
                     {%endfor%}
                   </tbody>

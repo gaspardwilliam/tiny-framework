@@ -1,0 +1,43 @@
+{% extends "dashboard.html.twig" %}
+
+{% block title %}{{title}}{% endblock %}
+{% block head %}
+    {{ parent() }}    
+    <style type="text/css">    
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="grid-container">
+       <div class="grid-x">
+           <div class="cell">
+               <h1>{{title}}</h1>
+           </div>
+           <div class="cell">
+                <form method="post">                                   
+                    <div class="grid-x grid-margin-x">
+                     
+                      <div class="medium-6 cell">
+                        <label>titre
+                            <input type="text" name="name" value="{{cat.name}}">
+                        </label>
+                      </div>                                      
+                     </div>
+                    <div class="grid-x grid-margin-x">
+                        
+                        {%if post.id%}
+                      <div class="cell">
+                            <a href="{{home~'admin/'~post.id~'/delete'}}" class="button small alert">supprimer</a>  
+                      </div>
+                      {%endif%}
+                      <div class="cell">
+                             <input type="submit" class="button">
+                      </div>
+                    </div>
+                </form>
+           </div>           
+       </div>       
+    </div>
+{% endblock %}
+{% block scripts %}
+    {{ parent() }}    
+{% endblock %}
