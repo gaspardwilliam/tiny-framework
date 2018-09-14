@@ -12,6 +12,11 @@ define('ASSETS', SITE_URL.'public/');
 //post type
 $posts_type=array(
     array(
+        'slug'=>'pages',
+        'singular_name'=>'page',
+        'plural_name'=>'pages'
+    ),
+    array(
         'slug'=>'posts',
         'singular_name'=>'post',
         'plural_name'=>'posts'
@@ -21,15 +26,11 @@ $posts_type=array(
         'singular_name'=>'astuce',
         'plural_name'=>'astuces'
     ),
-     array(
-        'slug'=>'recettes',
-        'singular_name'=>'recette',
-        'plural_name'=>'recettes'
-    ),    
-     array(
-        'slug'=>'jeux',
-        'singular_name'=>'jeu',
-        'plural_name'=>'jeux'
-    ),
+    array(
+        'slug'=>'chutes',
+        'singular_name'=>'chute',
+        'plural_name'=>'chutes'
+    )
+     
 
 );
