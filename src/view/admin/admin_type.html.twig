@@ -1,0 +1,57 @@
+{% extends "dashboard.html.twig" %}
+
+{% block title %}{{title}}{% endblock %}
+{% block head %}
+{{ parent() }}
+<style type="text/css">
+
+</style>
+{% endblock %}
+{% block content %}
+<div class="grid-container">
+    <div class="grid-x">
+        <div class="cell">
+            <h1>{{title}}</h1>
+        </div>
+
+        <div class="cell">
+            <a href="{{home~'admin/'~post_type~'/create'}}" class="float-right"><i class="fa-3x fas fa-plus-circle"></i>
+            </a>
+            <table>
+                <thead>
+                    <tr>
+                        <th width="200">Titre</th>
+                        <th width="150">type</th>
+                        <th width="150">créér le</th>
+                        <th width="150">mis à jour le</th>
+                        <th width="150">catégorie</th>
+                        <th width="150">editer</th>
+                        <th width="">voir</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for post in posts%}
+                    <tr>
+                        <td>{{post.post_title}}</td>
+                        <td>{{post.post_type}}</td>
+                        <td>{{post.post_created_date|date("d/m/y H:i", "Europe/Paris")}}</td>
+                        <td>{{post.post_updated_date|date("d/m/y H:i", "Europe/Paris")}}</td>
+                        <td>{{post.cat_name}}</td>
+                        <td><a href="{{home~'admin/'~post.post_id~'/edit'}}" class="button small">editer</a></td>
+                        {%if post.post_type=='page'%}
+                        <td><a href="{{home~post.post_slug}}" class="button small">voir</a></td>
+                        {%else%}
+                        <td><a href="{{home~post.post_type~'/'~post.post_slug}}" class="button small">voir</a></td>
+                        {%endif%}
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ parent() }}
+
+{% endblock %}

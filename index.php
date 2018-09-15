@@ -13,6 +13,7 @@ $twig = new Twig_Environment($loader, array(
     'debug' => true,
 ));
 $twig->addGlobal('home', SITE_URL);
+$twig->addGlobal('site_name', SITE_NAME);
 $twig->addGlobal('assets', ASSETS);
 $twig->addGlobal('posts_type', $posts_type);
 
@@ -20,7 +21,7 @@ $twig->addGlobal('posts_type', $posts_type);
 $router = new AltoRouter();
 $router->setBasePath('/altorouter');
 
-// map homepage
+//  homepage
 $router->map('GET', '/', function () {
     $ctrl = new DefaultController; //appelle Defaultcontroller dans src/controller
     $ctrl->index(); //appelle la methode index() de la class DefaultController
@@ -52,18 +53,20 @@ $router->map('GET', '/[a:type]', function ($type) {
 }, 'posts');
 
 //affiche un post
-$router->map('GET', '/post/[i:id]', function ($id) {
+/* $router->map('GET', '/post/[i:id]', function ($id) {
     $ctrl = new DefaultController;
     $ctrl->postid($id);
-}, 'post');
+}, 'post'); */
 
-//page admin création d'un post
+
+
+//page admin création d'une categorie
 $router->map('GET|POST', '/admin/category/create', function () {
     $ctrl = new DefaultController;
     $ctrl->admin_category_create();
 }, 'admin_category_create');
 
-//page admin création d'un post
+//page admin update d'un post
 $router->map('GET|POST', '/admin/category/[i:id]', function ($id) {
     $ctrl = new DefaultController;
     $ctrl->admin_category_update($id);
@@ -94,10 +97,26 @@ $router->map('GET|POST', '/admin/[:id]/edit', function ($id) {
 }, 'admin_update');
 
 //supprime un post
-$router->map('GET|POST', '/admin/[:id]/delete', function ($id) {
+$router->map('GET|POST', '/admin/post/[:id]/delete', function ($id) {
     $ctrl = new DefaultController;
-    $ctrl->admin_delete($id);
+    $ctrl->admin_post_delete($id);
 }, 'admin_delete');
+
+//supprime une categorie
+$router->map('GET|POST', '/admin/category/[:id]/delete', function ($id) {
+    $ctrl = new DefaultController;
+    $ctrl->admin_category_delete($id);
+}, 'admin_cat_delete');
+
+$router->map('GET', '/[a:type]/[:slug]', function ($type,$slug) {
+    $ctrl = new DefaultController;
+    $ctrl->postslug($type,$slug);
+}, 'post');
+
+$router->map('GET', '/[:slug]', function ($slug) {
+    $ctrl = new DefaultController;
+    $ctrl->postslug('page',$slug);
+}, 'page');
 
 $match = $router->match();
 
@@ -114,5 +133,5 @@ if ($match && is_callable($match['target'])) {
 } else {
     // no route was matched
     header($_SERVER["SERVER_PROTOCOL"] . ' 404 Not Found');
-    echo $twig->render('page/404.html.twig', array('title' => '404'));
+    echo $twig->render('page/404.html.twig', array('title' => '404-no route match'));
 }

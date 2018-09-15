@@ -14,22 +14,19 @@
                <h1>{{title}}</h1>
            </div>           
        </div>
-       <div class="grid-x grid-margin-x grid-margin-y">
-            
-            <div class="cell medium-6 large-4">
+       <div class="grid-x grid-margin-x grid-margin-y">            
+            <div class="cell ">
                 <div class="card">
                 <div class="card-image">
-                    <img src="https://via.placeholder.com/350x150"> 
+                    <img src="https://via.placeholder.com/450x250"> 
                 </div>                  
                 <div class="card-section">
                     <h2>{{post.post_title}}</h2>
-                    <p>{{post.post_content}}</p>
-                    <a href="{{home~'post/'~post.post_id}}" class="button">{{post.post_title}}</a>
+                    <p>{{post.post_content|markdown}}</p>                    
                 </div>
             </div>      
-            </div>                        
-           
-       </div>
+            </div>                  
+        </div>
    </div> 
 {% endblock %}
 {% block scripts %}

@@ -24,9 +24,9 @@
                      </div>
                     <div class="grid-x grid-margin-x">
                         
-                        {%if post.id%}
+                        {%if cat.id%}
                       <div class="cell">
-                            <a href="{{home~'admin/'~post.id~'/delete'}}" class="button small alert">supprimer</a>  
+                            <a href="{{home~'admin/category/'~cat.id~'/delete'}}" class="button small alert">supprimer</a>  
                       </div>
                       {%endif%}
                       <div class="cell">

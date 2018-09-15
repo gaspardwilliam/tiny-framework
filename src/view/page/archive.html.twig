@@ -22,9 +22,8 @@
                         <img src="https://via.placeholder.com/450x250"> 
                     </div>                  
                     <div class="card-section">
-                        <h2>{{post.post_title}}</h2>
-                        <p>{{post.post_content}}</p>
-                        <a href="{{home~'post/'~post.post_id}}" class="button">voir</a>
+                        <h2>{{post.post_title}}</h2>                        
+                        <a href="{{home~post.post_type~'/'~post.post_slug}}" class="button">voir</a>
                     </div>
                 </div>      
                 </div>                        

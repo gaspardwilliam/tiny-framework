@@ -45,9 +45,7 @@ class CategoryManager extends Model
 
     public function delete($id)
     {
-        $sql = "DELETE FROM $this->category_table WHERE post_id=$id";
-
-        // use exec() because no results are returned
+        $sql = "DELETE FROM $this->category_table WHERE cat_id=$id";
         $this->db->exec($sql);
     }
 }
