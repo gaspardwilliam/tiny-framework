@@ -1,14 +1,14 @@
 <?php
 namespace William\Controller;
 
+use Aptoma\Twig\Extension\MarkdownEngine;
+use Aptoma\Twig\Extension\MarkdownExtension;
 use William\Model\CategoryManager;
 use William\Model\PostManager;
+use William\Model\ImageManager;
 use William\Model\userManager;
 
-use Aptoma\Twig\Extension\MarkdownExtension;
-use Aptoma\Twig\Extension\MarkdownEngine;
-
-
+require_once 'vendor/verot/class.upload.php/src/class.upload.php';
 
 class DefaultController
 {
@@ -42,12 +42,12 @@ class DefaultController
         if (!empty($key) | $key === 0) {
             $postmanager = new PostManager;
             $data = $postmanager->fetchAll($this->posts_type[$key]['singular_name']);
-            if(file_exists ('src/view/page/archive-'.$slug.'.html.twig')){
-                echo $this->twig->render('page/archive-'.$slug.'.html.twig', array('title' => $slug, 'posts' => $data));
-            }else{
+            if (file_exists('src/view/page/archive-' . $slug . '.html.twig')) {
+                echo $this->twig->render('page/archive-' . $slug . '.html.twig', array('title' => $slug, 'posts' => $data));
+            } else {
                 echo $this->twig->render('page/archive.html.twig', array('title' => $slug, 'posts' => $data));
             }
-            
+
         } else {
             echo $this->twig->render('page/404.html.twig', array('title' => '404'));
         }
@@ -75,19 +75,26 @@ class DefaultController
             $postmanager = new PostManager;
             $data = $postmanager->fetchSlug($type, $slug);
             if ($data) {
-                if($data['post_type']=="page"){
-                    if(file_exists ('src/view/page/page-'.$data['post_slug'].'.html.twig')){
-                        echo $this->twig->render('page/page-'.$data['post_slug'].'.html.twig', array('title' => 'page', 'post' => $data));
-                    }else{
-                        echo $this->twig->render('page/page.html.twig', array('title' => 'page', 'post' => $data));
+                $imagesmanager=new Imagemanager;
+                $images=$imagesmanager->fetchImages($data['post_id']);pre($images);
+                $img=array();
+                foreach($images as $image){
+                    $img[$image['image_key']]=$image['image_name'];
+                }              
+
+                if ($data['post_type'] == "page") {
+                    if (file_exists('src/view/page/page-' . $data['post_slug'] . '.html.twig')) {
+                        echo $this->twig->render('page/page-' . $data['post_slug'] . '.html.twig', array('title' => 'page', 'post' => $data,'image'=>$img));
+                    } else {
+                        echo $this->twig->render('page/page.html.twig', array('title' => 'page', 'post' => $data,'image'=>$img));
                     }
-                    
-                }elseif(file_exists ('src/view/page/single-'.$data['post_type'].'.html.twig')){
-                    echo $this->twig->render('page/single-'.$data['post_type'].'.html.twig', array('title' => 'single-'.$type, 'post' => $data));
-                }else{
-                    echo $this->twig->render('page/single.html.twig', array('title' => 'single', 'post' => $data));
+
+                } elseif (file_exists('src/view/page/single-' . $data['post_type'] . '.html.twig')) {
+                    echo $this->twig->render('page/single-' . $data['post_type'] . '.html.twig', array('title' => 'single-' . $type, 'post' => $data,'image'=>$img));
+                } else {
+                    echo $this->twig->render('page/single.html.twig', array('title' => 'single', 'post' => $data,'image'=>$img));
                 }
-                
+
             } else {
                 echo $this->twig->render('page/404.html.twig', array('title' => '404 - l\'article n\'existe pas'));
             }
@@ -166,11 +173,62 @@ class DefaultController
                 //pre($_POST)  ;
                 //pre($post)  ;
                 if (!empty($_POST['title']) && !empty($_POST['content'])) {
-
+                    
                     $postmanager = new postManager;
-                    $postmanager->create($post);
-                    $url = $this->router->generate('admin');
-                    header("Location: $url");
+                    $post_id=$postmanager->create($post);
+
+                    $image_array = array();
+                    $handle = new \Upload($_FILES['image']);
+                    // then we check if the file has been uploaded properly
+                    // in its *temporary* location in the server (often, it is /tmp)
+                    if ($handle->uploaded) {
+                        // yes, the file is on the server
+                        // now, we start the upload 'process'. That is, to copy the uploaded file
+                        // from its temporary location to the wanted location
+                        // It could be something like $handle->Process('/home/www/my_uploads/');
+                        $handle->allowed = array('image/*');
+                        $handle->Process('public/img/uploaded_img/');
+                        array_push($image_array, array('key' => 'original',
+                            'name'=> $handle->file_dst_name));
+
+                        $handle->image_resize = true;
+                        $handle->image_ratio_y = true;
+                        $handle->image_x = 1024;
+                        $handle->file_name_body_add = '_large';
+                        $handle->Process('public/img/uploaded_img/');
+                        array_push($image_array, array('key' => 'large',
+                            'name'=> $handle->file_dst_name));
+
+                        $handle->image_resize = true;
+                        $handle->image_ratio_y = true;
+                        $handle->image_x = 300;
+                        $handle->file_name_body_add = '_medium';
+                        $handle->Process('public/img/uploaded_img/');
+                        array_push($image_array, array('key' => 'medium',
+                            'name'=> $handle->file_dst_name));
+
+                        $handle->image_resize = true;
+                        $handle->image_ratio_crop = true;
+                        $handle->image_ratio_y = false;
+                        $handle->image_y = 150;
+                        $handle->image_x = 150;
+                        $handle->file_name_body_add = '_thumbnail';
+                        $handle->Process('public/img/uploaded_img/');
+                        array_push($image_array, array('key' => 'thumbnail',
+                            'name'=> $handle->file_dst_name));
+                        // we check if everything went OK
+                        if ($handle->processed) {
+                            $imagemanager= new imageManager;
+                            $imagemanager->insert($image_array,$post_id);
+                        } else {
+
+                        }
+                        // we delete the temporary files
+                        $handle->Clean();
+                        
+                    }
+                    //$url = $this->router->generate('admin');
+                    //header("Location: $url");
                 }
             }
 

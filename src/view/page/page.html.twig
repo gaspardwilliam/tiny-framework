@@ -2,33 +2,35 @@
 
 {% block title %}{{title}}{% endblock %}
 {% block head %}
-    {{ parent() }}
-    <style type="text/css">
-    
-    </style>
+{{ parent() }}
+<style type="text/css">
+
+</style>
 {% endblock %}
 {% block content %}
-    <div class="grid-container">
-       <div class="grid-x">
-           <div class="cell">
-               <h1>{{title}}</h1>
-           </div>           
-       </div>
-       <div class="grid-x grid-margin-x grid-margin-y">            
-            <div class="cell ">
-                <div class="card">
+<div class="grid-container">
+    <div class="grid-x">
+        <div class="cell">
+            <h1>{{title}}</h1>
+        </div>
+    </div>
+    <div class="grid-x grid-margin-x grid-margin-y">
+        <div class="cell ">
+            <div class="card"> 
+                {%if image%}
                 <div class="card-image">
-                    <img src="https://via.placeholder.com/450x250"> 
-                </div>                  
+                    <img src="{{assets}}img/uploaded_img/{{image.large}}">
+                </div> 
+                {%endif%}
                 <div class="card-section">
                     <h2>{{post.post_title}}</h2>
-                    <p>{{post.post_content|markdown}}</p>                    
+                    <p>{{post.post_content|markdown}}</p>
                 </div>
-            </div>      
-            </div>                  
+            </div>
         </div>
-   </div> 
+    </div>
+</div>
 {% endblock %}
 {% block scripts %}
-    {{ parent() }}    
+{{ parent() }}
 {% endblock %}

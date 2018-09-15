@@ -10,7 +10,8 @@
         "altorouter/altorouter": "1.1.0",
         "twig/twig": "^2.0",
         "erusev/parsedown": "^1.7",
-        "aptoma/twig-markdown": "^3.0"
+        "aptoma/twig-markdown": "^3.0",
+        "verot/class.upload.php": "dev-master"
     },
     "autoload": {
         "psr-4": {

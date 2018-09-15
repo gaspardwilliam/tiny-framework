@@ -26,6 +26,7 @@ class PostManager extends Model
         $type = $post->type();
         $updated = $created;
         $stmt->execute();
+        return $this->db->lastInsertId();
     }
 
     public function fetchAll($type)
@@ -47,7 +48,7 @@ class PostManager extends Model
 
     public function fetchSlug($type,$slug)
     {
-        $stmt = $this->db->prepare("SELECT * FROM $this->posts_table LEFT JOIN $this->categories_table ON alto_posts.cat_id = alto_categories.cat_id where post_type=? AND post_slug = ?");
+        $stmt = $this->db->prepare("SELECT * FROM $this->posts_table LEFT JOIN $this->categories_table ON alto_posts.cat_id = alto_categories.cat_id  where post_type=? AND post_slug = ? ");
         if ($stmt->execute(array($type,$slug))) {
             return $stmt->fetch(\PDO::FETCH_ASSOC);
         }

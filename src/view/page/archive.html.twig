@@ -18,9 +18,11 @@
             {% for post in posts %}
                 <div class="cell medium-6 large-4 {{'post post-'~post.post_id}}">
                     <div class="card">
-                    <div class="card-image">
-                        <img src="https://via.placeholder.com/450x250"> 
-                    </div>                  
+                            {%if image%}
+                            <div class="card-image">
+                                <img src="{{assets}}img/uploaded_img/{{image.large}}">
+                            </div> 
+                            {%endif%}                
                     <div class="card-section">
                         <h2>{{post.post_title}}</h2>                        
                         <a href="{{home~post.post_type~'/'~post.post_slug}}" class="button">voir</a>
