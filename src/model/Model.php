@@ -4,11 +4,16 @@ namespace William\Model;
 class Model
 {
 
-    public $db;
+    protected $db;
     private $username;
     private $dbname;
     private $password;
     private $servername;
+
+    protected $posts_table = 'alto_posts';
+    protected $categories_table = 'alto_categories';
+    protected $images_table = 'alto_images';
+    protected $users_table = 'alto_users';
 
     public function __construct()
     {

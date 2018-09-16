@@ -2,40 +2,42 @@
 
 {% block title %}{{title}}{% endblock %}
 {% block head %}
-    {{ parent() }}
-    <style type="text/css">
-    
-    </style>
+{{ parent() }}
+<style type="text/css">
+
+</style>
 {% endblock %}
 {% block content %}
-   <div class="grid-container">
-       <div class="grid-x">
-           <div class="cell">
-               <h1>{{title}}</h1>
-           </div>           
-       </div>
-       <div class="grid-x grid-margin-x grid-margin-y">
-            {% for post in posts %}
-                <div class="cell medium-6 large-4 {{'post post-'~post.post_id}}">
-                    <div class="card">
-                            {%if image%}
-                            <div class="card-image">
-                                <img src="{{assets}}img/uploaded_img/{{image.large}}">
-                            </div> 
-                            {%endif%}                
-                    <div class="card-section">
-                        <h2>{{post.post_title}}</h2>                        
-                        <a href="{{home~post.post_type~'/'~post.post_slug}}" class="button">voir</a>
-                    </div>
-                </div>      
-                </div>                        
-           {% endfor %}
-       </div>
-   </div>
-   
-   
+<div class="grid-container">
+    <div class="grid-x">
+        <div class="cell">
+            <h1>{{title}}</h1>
+        </div>
+    </div>
+    <div class="grid-x grid-margin-x grid-margin-y">
+        {% for post in posts %}
+        <div class="cell medium-6 large-4 {{'post post-'~post.post_id}}">
+
+            <div class="card">
+                {% set image_url=image.getImage(post.post_id,'medium') %}
+                {% if image_url %}
+                <div class="card-image">
+                    <img src="{{image_url}}">
+                </div>
+                {%endif%}
+                <div class="card-section">
+                    <h2>{{post.post_title}}</h2>
+                    <a href="{{home~post.post_type~'/'~post.post_slug}}" class="button">voir</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
 {% endblock %}
 {% block scripts %}
-    {{ parent() }}
-    
+{{ parent() }}
+
 {% endblock %}

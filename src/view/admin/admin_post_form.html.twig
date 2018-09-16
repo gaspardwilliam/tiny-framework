@@ -34,6 +34,12 @@
                                 </select>
                             </label>                          
                       </div>
+                      <div class="medium-6 cell">
+                            {% set image_url=image.getImage(post.id,'thumbnail') %}
+                            {% if image_url %}               
+                                <img src="{{image_url}}">                
+                            {%endif%}
+                      </div>
                       
                     </div>
                     <div class="grid-x grid-margin-x">

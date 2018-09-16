@@ -17,11 +17,10 @@
     <div class="grid-x grid-margin-x grid-margin-y">
         <div class="cell ">
             <div class="card"> 
-                {%if image%}
-                <div class="card-image">
-                    <img src="{{assets}}img/uploaded_img/{{image.large}}">
-                </div> 
-                {%endif%}
+                    {% set image_url=image.getImage(post.post_id,'large') %}
+                    {% if image_url %}                
+                        <img src="{{image_url}}">                
+                    {%endif%}
                 <div class="card-section">
                     <h2>{{post.post_title}}</h2>
                     <p>{{post.post_content|markdown}}</p>

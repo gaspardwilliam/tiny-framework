@@ -3,6 +3,7 @@ require 'vendor/autoload.php';
 require 'vendor/altorouter/altorouter/AltoRouter.php';
 require 'src/config.php';
 require 'src/functions.php';
+use William\Model\ImageManager;
 
 use William\Controller\DefaultController;
 session_start();
@@ -16,6 +17,12 @@ $twig->addGlobal('home', SITE_URL);
 $twig->addGlobal('site_name', SITE_NAME);
 $twig->addGlobal('assets', ASSETS);
 $twig->addGlobal('posts_type', $posts_type);
+$twig->addGlobal('image', new ImageManager());
+
+$filter = new Twig_Filter('pre', function ($string) {
+    return pre($string);
+});
+$twig->addFilter($filter);
 
 //ALTOROUTER
 $router = new AltoRouter();

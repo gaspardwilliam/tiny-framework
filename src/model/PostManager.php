@@ -3,8 +3,6 @@ namespace William\Model;
 
 class PostManager extends Model
 {
-    private $posts_table = 'alto_posts';
-    private $categories_table = 'alto_categories';
 
     public function create($post)
     {
@@ -39,17 +37,17 @@ class PostManager extends Model
 
     public function fetchID($id)
     {
-        $stmt = $this->db->prepare("SELECT * FROM $this->posts_table LEFT JOIN $this->categories_table ON alto_posts.cat_id = alto_categories.cat_id where post_id = ?");
+        $stmt = $this->db->prepare("SELECT * FROM $this->posts_table LEFT JOIN $this->categories_table ON alto_posts.cat_id = alto_categories.cat_id WHERE post_id = ?");
         if ($stmt->execute(array($id))) {
             return $stmt->fetch(\PDO::FETCH_ASSOC);
         }
 
     }
 
-    public function fetchSlug($type,$slug)
+    public function fetchSlug($type, $slug)
     {
-        $stmt = $this->db->prepare("SELECT * FROM $this->posts_table LEFT JOIN $this->categories_table ON alto_posts.cat_id = alto_categories.cat_id  where post_type=? AND post_slug = ? ");
-        if ($stmt->execute(array($type,$slug))) {
+        $stmt = $this->db->prepare("SELECT * FROM $this->posts_table LEFT JOIN $this->categories_table ON $this->posts_table.cat_id = $this->categories_table.cat_id  WHERE post_type=? AND post_slug = ? ");
+        if ($stmt->execute(array($type, $slug))) {
             return $stmt->fetch(\PDO::FETCH_ASSOC);
         }
 
@@ -79,9 +77,26 @@ class PostManager extends Model
 
     public function delete($id)
     {
-        $sql = "DELETE FROM alto_posts WHERE post_id=$id";
+        $sql = "DELETE FROM $this->posts_table WHERE post_id=$id";
+
+        $this->delete_img($id);
+
+        $sql2 = "DELETE FROM $this->images_table WHERE post_id=$id";
 
         // use exec() because no results are returned
         $this->db->exec($sql);
+
+        $this->db->exec($sql2);
+
+    }
+    public function delete_img($id)
+    {
+        $stmt = $this->db->prepare("SELECT image_name FROM $this->images_table WHERE post_id = ?");
+        if ($stmt->execute(array($id))) {
+            $images = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($images as $image) {
+                unlink('public/img/uploaded_img/' . $image['image_name']);
+            }
+        }
     }
 }

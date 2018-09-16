@@ -3,11 +3,10 @@ namespace William\Model;
 
 class CategoryManager extends Model
 {
-    private $category_table = 'alto_categories';
 
     public function create($cat)
     {
-        $stmt = $this->db->prepare("INSERT INTO $this->category_table (cat_name) VALUES (:name)");
+        $stmt = $this->db->prepare("INSERT INTO $this->categories_table (cat_name) VALUES (:name)");
         $stmt->bindParam(':name', $name);
 
         // insertion d'une ligne
@@ -17,7 +16,7 @@ class CategoryManager extends Model
 
     public function fetchAll()
     {
-        $stmt = $this->db->prepare("SELECT * FROM $this->category_table ");
+        $stmt = $this->db->prepare("SELECT * FROM $this->categories_table ");
         if ($stmt->execute()) {
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
         }
@@ -25,7 +24,7 @@ class CategoryManager extends Model
 
     public function fetchID($id)
     {
-        $stmt = $this->db->prepare("SELECT * FROM $this->category_table  where cat_id = ?");
+        $stmt = $this->db->prepare("SELECT * FROM $this->categories_table  where cat_id = ?");
         if ($stmt->execute(array($id))) {
             return $stmt->fetch(\PDO::FETCH_ASSOC);
         }
@@ -34,7 +33,7 @@ class CategoryManager extends Model
 
     public function update($cat)
     {
-        $stmt = $this->db->prepare("UPDATE $this->category_table SET cat_name=:name WHERE cat_id=:id");
+        $stmt = $this->db->prepare("UPDATE $this->categories_table SET cat_name=:name WHERE cat_id=:id");
         $stmt->bindParam(":name", $name);
         $stmt->bindParam(":id", $id);
 
@@ -45,7 +44,7 @@ class CategoryManager extends Model
 
     public function delete($id)
     {
-        $sql = "DELETE FROM $this->category_table WHERE cat_id=$id";
+        $sql = "DELETE FROM $this->categories_table WHERE cat_id=$id";
         $this->db->exec($sql);
     }
 }
