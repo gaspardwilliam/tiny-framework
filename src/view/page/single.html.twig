@@ -15,12 +15,9 @@
         </div>
     </div>
     <div class="grid-x grid-margin-x grid-margin-y">
-        <div class="cell ">
-                {% set image_url=image.getImage(post.post_id,'large') %}
-                {% if image_url %}                
-                    <img src="{{image_url}}">                
-                {%endif%}
+        <div class="cell ">                
             <h2>{{post.post_title}}</h2>
+            <img src="{{images[post.post_id]['medium']}}" alt=""> 
             <p>{{post.post_content|markdown}}</p>
         </div>
     </div>

@@ -14,20 +14,23 @@
             <h1>{{title}}</h1>
         </div>
     </div>
+
     <div class="grid-x grid-margin-x grid-margin-y">
         {% for post in posts %}
         <div class="cell medium-6 large-4 {{'post post-'~post.post_id}}">
 
             <div class="card">
-                {% set image_url=image.getImage(post.post_id,'medium') %}
-                {% if image_url %}
+                {%if images[post.post_id] %}
                 <div class="card-image">
-                    <img src="{{image_url}}">
+                    <img src="{{images[post.post_id]['large']}}" alt="">
                 </div>
                 {%endif%}
                 <div class="card-section">
                     <h2>{{post.post_title}}</h2>
-                    <a href="{{home~post.post_type~'/'~post.post_slug}}" class="button">voir</a>
+                    <a href="{{home ~ post.post_type ~'/'~ post.post_slug}}" class="button">voir</a>
+                    {% set array = ['post','test'] %}
+                    
+                    
                 </div>
             </div>
         </div>

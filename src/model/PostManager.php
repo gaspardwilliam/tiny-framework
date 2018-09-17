@@ -1,6 +1,9 @@
 <?php
 namespace William\Model;
 
+use William\Controller\ImageController;
+use William\Model\ImageManager;
+
 class PostManager extends Model
 {
 
@@ -24,7 +27,9 @@ class PostManager extends Model
         $type = $post->type();
         $updated = $created;
         $stmt->execute();
-        return $this->db->lastInsertId();
+        $id = $this->db->lastInsertId();
+        $imgctrl = new ImageController;
+        $imgctrl->image($id, 'insert');
     }
 
     public function fetchAll($type)
@@ -71,15 +76,18 @@ class PostManager extends Model
         $type = $post->type();
         $updated = $post->updated();
         $slug = slugify($post->title());
-
         $stmt->execute();
+        $imgctrl = new ImageController;
+        $imgctrl->image($id, 'update');
+
     }
 
     public function delete($id)
     {
         $sql = "DELETE FROM $this->posts_table WHERE post_id=$id";
 
-        $this->delete_img($id);
+        $imgmanager = new ImageManager;
+        $imgmanager->delete_img($id);
 
         $sql2 = "DELETE FROM $this->images_table WHERE post_id=$id";
 
@@ -89,14 +97,5 @@ class PostManager extends Model
         $this->db->exec($sql2);
 
     }
-    public function delete_img($id)
-    {
-        $stmt = $this->db->prepare("SELECT image_name FROM $this->images_table WHERE post_id = ?");
-        if ($stmt->execute(array($id))) {
-            $images = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-            foreach ($images as $image) {
-                unlink('public/img/uploaded_img/' . $image['image_name']);
-            }
-        }
-    }
+
 }

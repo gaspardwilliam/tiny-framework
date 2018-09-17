@@ -21,21 +21,6 @@ $posts_type=array(
         'slug'=>'posts',
         'singular_name'=>'post',
         'plural_name'=>'posts'
-    ),
-    array(
-        'slug'=>'astuces',
-        'singular_name'=>'astuce',
-        'plural_name'=>'astuces'
-    ),
-    array(
-        'slug'=>'chutes',
-        'singular_name'=>'chute',
-        'plural_name'=>'chutes'
-    ),
-    array(
-        'slug'=>'azes',
-        'singular_name'=>'aze',
-        'plural_name'=>'azes'
     )
      
 

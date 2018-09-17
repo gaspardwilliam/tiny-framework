@@ -15,8 +15,8 @@ class ImageManager extends Model
         // insertion d'une ligne
         foreach ($images as $image) {
             $name = $image['name'];
-            $key = $image['key'];   
-            $stmt->execute();         
+            $key = $image['key'];
+            $stmt->execute();
         }
 
     }
@@ -40,22 +40,46 @@ class ImageManager extends Model
                 $stmt->execute();
 
             }
-        }else{
-            $this->insert($images,$post_id);
+        } else {
+            $this->insert($images, $post_id);
         }
     }
 
-    public function fetchImages($post_id)
+    /* public function fetchImages($post_id)
     {
-        $stmt = $this->db->prepare("SELECT * FROM $this->images_table WHERE post_id=?");
-        if ($stmt->execute(array($post_id))) {
-            $images = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-            $img = array();
-            foreach ($images as $image) {
-                $img[$image['image_key']] = $image['image_name'];
+    $stmt = $this->db->prepare("SELECT * FROM $this->images_table WHERE post_id=?");
+    if ($stmt->execute(array($post_id))) {
+    $images = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    $img = array();
+    foreach ($images as $image) {
+    $img[$image['image_key']] = $image['image_name'];
+    }
+    return $img;
+    }
+    } */
+
+    public function fetchImages($ids)
+    {
+        // creates a string containing ?,?,?
+        $clause = implode(',', array_fill(0, count($ids), '?'));
+
+        $stmt = $this->db->prepare("SELECT * FROM $this->images_table WHERE post_id IN ($clause)");
+
+        //call_user_func_array(array($stmt, 'bindParam'), $ids);
+
+        if ($stmt->execute($ids)) {
+            //$images = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+
+                $results[$row['post_id']][$row['image_key']] = $row['image_name'];
             }
-            return $img;
+            return $results;
         }
+        $filter2 = new Twig_Filter('imagefecth', function ($size) {
+            return $size;
+        });
+
+        $twig->addFilter($filter2);
     }
 
     public function getImage($post_id, $size)
@@ -68,6 +92,25 @@ class ImageManager extends Model
                 return $url;
             }
 
+        }
+    }
+
+    public function postImage($array, $post_id, $size)
+    {
+        $key = array_keys($array, array("post_id" => $post_id, "image_key" => $size));
+
+        print_r($array);
+    }
+
+    public function delete_img($id)
+    {
+        $stmt = $this->db->prepare("SELECT image_name FROM $this->images_table WHERE post_id = ?");
+        if ($stmt->execute(array($id))) {
+            $images = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($images as $image) {
+                unlink($image['image_name']);
+            }return true;
+            
         }
     }
 

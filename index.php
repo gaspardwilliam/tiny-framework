@@ -17,12 +17,15 @@ $twig->addGlobal('home', SITE_URL);
 $twig->addGlobal('site_name', SITE_NAME);
 $twig->addGlobal('assets', ASSETS);
 $twig->addGlobal('posts_type', $posts_type);
-$twig->addGlobal('image', new ImageManager());
+//$twig->addGlobal('image', new ImageManager());
 
 $filter = new Twig_Filter('pre', function ($string) {
     return pre($string);
 });
+
 $twig->addFilter($filter);
+
+
 
 //ALTOROUTER
 $router = new AltoRouter();
@@ -125,6 +128,7 @@ $router->map('GET', '/[:slug]', function ($slug) {
     $ctrl->postslug('page',$slug);
 }, 'page');
 
+$twig->addGlobal('router', $router);
 $match = $router->match();
 
 // call closure or throw 404 status

@@ -54,5 +54,13 @@ class CategoryController
         }
 
     }
+    public function admin_category_delete($id) //supprime un post par son id
+
+    {
+        $catmanager = new CategoryManager;
+        $data = $catmanager->delete($id);
+        $url = $this->router->generate('admin_category');
+        header("Location: $url");
+    }
 
 }

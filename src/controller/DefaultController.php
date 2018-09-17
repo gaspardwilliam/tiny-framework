@@ -38,14 +38,22 @@ class DefaultController
     public function posts($slug) //affiche la page des posts d'un type de post
 
     {
-        $key = array_search($slug, array_column($this->posts_type, 'slug'));
-        if (!empty($key) | $key === 0) {
+        $key = array_search($slug, array_column($this->posts_type, 'slug')); //récupere l'index du type de post si il existe
+        if (!empty($key) | $key === 0) { //si le type de post existe dans le tableau
             $postmanager = new PostManager;
             $data = $postmanager->fetchAll($this->posts_type[$key]['singular_name']);
+
+            foreach ($data as $post) {
+                $ids[] = $post['post_id'];
+            }
+
+            $imagemanager = new ImageManager;
+            $images = $imagemanager->fetchImages($ids);
+
             if (file_exists('src/view/page/archive-' . $slug . '.html.twig')) {
-                echo $this->twig->render('page/archive-' . $slug . '.html.twig', array('title' => $slug, 'posts' => $data));
+                echo $this->twig->render('page/archive-' . $slug . '.html.twig', array('title' => $slug, 'posts' => $data, 'images' => $images));
             } else {
-                echo $this->twig->render('page/archive.html.twig', array('title' => $slug, 'posts' => $data));
+                echo $this->twig->render('page/archive.html.twig', array('title' => $slug, 'posts' => $data, 'images' => $images));
             }
 
         } else {
@@ -53,16 +61,16 @@ class DefaultController
         }
     }
 
-   /*  public function postid($id)
+    /*  public function postid($id)
 
     {
-        $postmanager = new PostManager;
-        $data = $postmanager->fetchID($id);
-        if ($data) {
-            echo $this->twig->render('page/single.html.twig', array('title' => 'post', 'post' => $data));
-        } else {
-            echo $this->twig->render('page/404.html.twig', array('title' => '404 - l\'article n\'existe pas'));
-        }
+    $postmanager = new PostManager;
+    $data = $postmanager->fetchID($id);
+    if ($data) {
+    echo $this->twig->render('page/single.html.twig', array('title' => 'post', 'post' => $data));
+    } else {
+    echo $this->twig->render('page/404.html.twig', array('title' => '404 - l\'article n\'existe pas'));
+    }
 
     } */
 
@@ -70,23 +78,22 @@ class DefaultController
 
     {
         $key = array_search($type, array_column($this->posts_type, 'singular_name'));
-
         if (!empty($key) | $key === 0) {
             $postmanager = new PostManager;
             $data = $postmanager->fetchSlug($type, $slug);
             if ($data) {
-
+                $imagemanager = new ImageManager;
+                $image = $imagemanager->fetchImages(array($data['post_id']));
                 if ($data['post_type'] == "page") {
                     if (file_exists('src/view/page/page-' . $data['post_slug'] . '.html.twig')) {
-                        echo $this->twig->render('page/page-' . $data['post_slug'] . '.html.twig', array('title' => 'page', 'post' => $data));
+                        echo $this->twig->render('page/page-' . $data['post_slug'] . '.html.twig', array('title' => 'page', 'post' => $data, 'images' => $image));
                     } else {
-                        echo $this->twig->render('page/page.html.twig', array('title' => 'page', 'post' => $datas));
+                        echo $this->twig->render('page/page.html.twig', array('title' => 'page', 'post' => $datas, 'images' => $image));
                     }
-
                 } elseif (file_exists('src/view/page/single-' . $data['post_type'] . '.html.twig')) {
-                    echo $this->twig->render('page/single-' . $data['post_type'] . '.html.twig', array('title' => 'single-' . $type, 'post' => $data));
+                    echo $this->twig->render('page/single-' . $data['post_type'] . '.html.twig', array('title' => 'single-' . $type, 'post' => $data, 'images' => $image));
                 } else {
-                    echo $this->twig->render('page/single.html.twig', array('title' => 'single', 'post' => $data));
+                    echo $this->twig->render('page/single.html.twig', array('title' => 'single', 'post' => $data, 'images' => $image));
                 }
 
             } else {
@@ -122,7 +129,7 @@ class DefaultController
         echo $this->twig->render('page/connect.html.twig', array('title' => 'connexion', 'error' => $error, 'email' => $user->email()));
     }
 
-    public function deconnect() //se deconnecté
+    public function deconnect() //se deconnecter
 
     {
         session_destroy();
@@ -169,16 +176,14 @@ class DefaultController
                 if (!empty($_POST['title']) && !empty($_POST['content'])) {
 
                     $postmanager = new postManager;
-                    $post_id = $postmanager->create($post);
+                    $postmanager->create($post);
 
-                    $this->image($post_id, 'insert');
-
-                    $url = $this->router->generate('admin_type',array('type'=>$this->posts_type[$key]['slug']));
+                    $url = $this->router->generate('admin_type', array('type' => $this->posts_type[$key]['slug']));
                     header("Location: $url");
                 }
             }
 
-            echo $this->twig->render('admin/admin_post_form.html.twig', array('title' => 'créer un/une '.$post_type, 'post' => $post, 'categories' => $categories, 'tips' => $this->posts_type));
+            echo $this->twig->render('admin/admin_post_form.html.twig', array('title' => 'créer un/une ' . $post_type, 'post' => $post, 'categories' => $categories, 'tips' => $this->posts_type));
         } else {
             echo $this->twig->render('page/404.html.twig', array('title' => '404'));
         }
@@ -207,10 +212,10 @@ class DefaultController
                     $postmanager = new postManager;
                     $postmanager->update($post);
 
-                    $this->image($id, 'update');
+                    
                     $key = array_search($data['post_type'], array_column($this->posts_type, 'singular_name'));
-                    $url = $this->router->generate('admin_type',array('type'=>$this->posts_type[$key]['slug']));
-                    header("Location: $url");
+                    $url = $this->router->generate('admin_type', array('type' => $this->posts_type[$key]['slug']));
+                    //header("Location: $url");
                 }
             }
             echo $this->twig->render('admin/admin_post_form.html.twig', array('title' => 'modifier', 'post' => $post, 'categories' => $categories, 'tips' => $this->posts_type));
@@ -280,74 +285,6 @@ class DefaultController
             echo $this->twig->render('page/404.html.twig', array('title' => '404'));
         }
 
-    }
-
-    public function admin_category_delete($id) //supprime un post par son id
-
-    {
-        $catmanager = new CategoryManager;
-        $data = $catmanager->delete($id);
-        $url = $this->router->generate('admin_category');
-        header("Location: $url");
-    }
-
-    private function image($post_id, $method)
-    {
-        $image_array = array();
-        $handle = new \Upload($_FILES['image']);
-        // then we check if the file has been uploaded properly
-        // in its *temporary* location in the server (often, it is /tmp)
-        if ($handle->uploaded) {
-            // yes, the file is on the server
-            // now, we start the upload 'process'. That is, to copy the uploaded file
-            // from its temporary location to the wanted location
-            // It could be something like $handle->Process('/home/www/my_uploads/');
-            if ($method == "update") {
-                $deleteimg=new Postmanager;
-                $deleteimg->delete_img($post_id);
-            }
-
-            $handle->allowed = array('image/*');
-            $handle->Process('public/img/uploaded_img/');
-            array_push($image_array, array('key' => 'original',
-                'name' => $handle->file_dst_name));
-
-            $handle->image_resize = true;
-            $handle->image_ratio_y = true;
-            $handle->image_x = 1024;
-            $handle->file_name_body_add = '_large';
-            $handle->Process('public/img/uploaded_img/');
-            array_push($image_array, array('key' => 'large',
-                'name' => $handle->file_dst_name));
-
-            $handle->image_resize = true;
-            $handle->image_ratio_y = true;
-            $handle->image_x = 300;
-            $handle->file_name_body_add = '_medium';
-            $handle->Process('public/img/uploaded_img/');
-            array_push($image_array, array('key' => 'medium',
-                'name' => $handle->file_dst_name));
-
-            $handle->image_resize = true;
-            $handle->image_ratio_crop = true;
-            $handle->image_ratio_y = false;
-            $handle->image_y = 150;
-            $handle->image_x = 150;
-            $handle->file_name_body_add = '_thumbnail';
-            $handle->Process('public/img/uploaded_img/');
-            array_push($image_array, array('key' => 'thumbnail',
-                'name' => $handle->file_dst_name));
-            // we check if everything went OK
-            if ($handle->processed) {
-                $imagemanager = new imageManager;
-                $imagemanager->$method($image_array, $post_id);
-            } else {
-
-            }
-            // we delete the temporary files
-            $handle->Clean();
-
-        }
     }
 
 }
