@@ -21,6 +21,11 @@ $posts_type=array(
         'slug'=>'posts',
         'singular_name'=>'post',
         'plural_name'=>'posts'
+    ),
+    array(
+        'slug'=>'portfolio',
+        'singular_name'=>'projet',
+        'plural_name'=>'projets'
     )
      
 

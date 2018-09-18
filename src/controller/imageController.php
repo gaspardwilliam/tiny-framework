@@ -71,9 +71,7 @@ class ImageController
 
     }
 
-    
-
-    public function image($post_id, $method)
+    public function image($post_id, $method)//ajoute les images sur le serveur et dans la db
     {
         $image_array = array();
         $handle = new \Upload($_FILES['image']);
@@ -86,16 +84,16 @@ class ImageController
             // It could be something like $handle->Process('/home/www/my_uploads/');
             $imgmanager = new ImageManager;
             if ($method == "update") {
-               
-                if(empty($imgmanager->delete_img($post_id))){
-                    $method="insert";
+
+                if (empty($imgmanager->delete_img($post_id))) {
+                    $method = "insert";
                 }
             }
 
             $handle->allowed = array('image/*');
             $handle->Process('public/img/uploaded_img/');
             array_push($image_array, array('key' => 'original',
-                'name' => 'public/img/uploaded_img/'.$handle->file_dst_name));
+                'name' => 'public/img/uploaded_img/' . $handle->file_dst_name));
 
             $handle->image_resize = true;
             $handle->image_ratio_y = true;
@@ -103,7 +101,7 @@ class ImageController
             $handle->file_name_body_add = '_large';
             $handle->Process('public/img/uploaded_img/');
             array_push($image_array, array('key' => 'large',
-                'name' => 'public/img/uploaded_img/'.$handle->file_dst_name));
+                'name' => 'public/img/uploaded_img/' . $handle->file_dst_name));
 
             $handle->image_resize = true;
             $handle->image_ratio_y = true;
@@ -111,7 +109,7 @@ class ImageController
             $handle->file_name_body_add = '_medium';
             $handle->Process('public/img/uploaded_img/');
             array_push($image_array, array('key' => 'medium',
-                'name' => 'public/img/uploaded_img/'.$handle->file_dst_name));
+                'name' => 'public/img/uploaded_img/' . $handle->file_dst_name));
 
             $handle->image_resize = true;
             $handle->image_ratio_crop = true;
@@ -121,10 +119,10 @@ class ImageController
             $handle->file_name_body_add = '_thumbnail';
             $handle->Process('public/img/uploaded_img/');
             array_push($image_array, array('key' => 'thumbnail',
-                'name' => 'public/img/uploaded_img/'.$handle->file_dst_name));
+                'name' => 'public/img/uploaded_img/' . $handle->file_dst_name));
             // we check if everything went OK
             if ($handle->processed) {
-               
+
                 $imgmanager->$method($image_array, $post_id);
             } else {
 

@@ -1,6 +1,10 @@
 <?php
 namespace William\Controller;
 
+use William\Model\PostManager;
+use William\Model\PostMetaManager;
+
+
 class PostController
 {
     private $id;
@@ -58,9 +62,7 @@ class PostController
 
     public function setId($id)
     {
-
         $id = (int) $id;
-
         // On vérifie ensuite si ce nombre est bien strictement positif.
         if ($id > 0) {
             // Si c'est le cas, c'est tout bon, on assigne la valeur à l'attribut correspondant.
@@ -98,7 +100,7 @@ class PostController
     {
         if (is_string($content)) {
             $this->content = $content;
-        }
+        }else{echo 'error content type';}
     }
 
     public function setCreated($created)
@@ -124,15 +126,52 @@ class PostController
 
     public function hydrate($donnees)
     {
+        
+        $metas_array = [];
+       
         foreach ($donnees as $key => $value) {
             // On récupère le nom du setter correspondant à l'attribut.
+            
             $method = 'set' . ucfirst($key);
-
             // Si le setter correspondant existe.
             if (method_exists($this, $method)) {
-                // On appelle le setter.
+                // On appelle le setter
                 $this->$method($value);
+            } else {
+                array_push($metas_array, array('key' => $key,
+                    'value' => $value));
             }
+        }return $metas_array;pre($this);
+
+    }
+
+    public function create($post){
+        $metas=$this->hydrate($post);
+        $this->setCreated(date("Y-m-d H:i:s"));
+
+        $postmanager=new PostManager;
+        $id=$postmanager->create($this);//insert le post et récupere son id
+        $imgctrl = new ImageController;
+        $imgctrl->image($id, 'insert');//insert les images
+        
+        if(!empty($metas)){
+            $postmetamanager=new PostMetamanager;
+            $postmetamanager->insert($metas,$id);
+        }
+
+    }
+
+    public function update($post){
+        $metas=$this->hydrate($post);       
+        
+        $postmanager=new PostManager;
+        $id=$postmanager->update($this);//met à jour le post et récupere son id
+        $imgctrl = new ImageController;
+        $imgctrl->image($this->id(), 'insert');//insert les images
+        
+        if(!empty($metas)){
+            $postmetamanager=new PostMetamanager;
+            $postmetamanager->insert($metas,$this->id());
         }
 
     }

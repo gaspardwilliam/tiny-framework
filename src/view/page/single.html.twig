@@ -1,13 +1,13 @@
 {% extends "base.html.twig" %}
-
 {% block title %}{{title}}{% endblock %}
 {% block head %}
 {{ parent() }}
 <style type="text/css">
-
 </style>
 {% endblock %}
 {% block content %}
+{% set image=images[post.post_id] %}
+{% set meta=metas[post.post_id] %}
 <div class="grid-container">
     <div class="grid-x">
         <div class="cell">
@@ -15,10 +15,15 @@
         </div>
     </div>
     <div class="grid-x grid-margin-x grid-margin-y">
-        <div class="cell ">                
+        <div class="cell ">
             <h2>{{post.post_title}}</h2>
-            <img src="{{images[post.post_id]['medium']}}" alt=""> 
+            {% if image %}
+            <img src="{{image['medium']}}" alt="">
+            {% endif %}
             <p>{{post.post_content|markdown}}</p>
+            {% if meta['youtube'] %}
+            <p>{{meta['youtube']}}</p>
+            {% endif %}
         </div>
     </div>
 </div>

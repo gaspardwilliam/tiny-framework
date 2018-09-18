@@ -17,19 +17,21 @@
 
     <div class="grid-x grid-margin-x grid-margin-y">
         {% for post in posts %}
+        {% set image=images[post.post_id] %}
+        {% set meta=metas[post.post_id] %}
         <div class="cell medium-6 large-4 {{'post post-'~post.post_id}}">
 
             <div class="card">
-                {%if images[post.post_id] %}
+                {%if image %}
                 <div class="card-image">
-                    <img src="{{images[post.post_id]['large']}}" alt="">
+                    <img src="{{image['large']}}" alt="">
                 </div>
                 {%endif%}
                 <div class="card-section">
                     <h2>{{post.post_title}}</h2>
+                    <p>{{meta['youtube']}}</p>                    
                     <a href="{{home ~ post.post_type ~'/'~ post.post_slug}}" class="button">voir</a>
-                    {% set array = ['post','test'] %}
-                    
+                    {% set array = ['post','test'] %}                  
                     
                 </div>
             </div>

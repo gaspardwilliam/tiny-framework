@@ -14,6 +14,7 @@ class Model
     protected $categories_table = 'alto_categories';
     protected $images_table = 'alto_images';
     protected $users_table = 'alto_users';
+    protected $postmeta_table = 'alto_postmeta';
 
     public function __construct()
     {

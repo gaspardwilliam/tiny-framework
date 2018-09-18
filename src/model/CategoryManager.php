@@ -16,7 +16,7 @@ class CategoryManager extends Model
 
     public function fetchAll()
     {
-        $stmt = $this->db->prepare("SELECT * FROM $this->categories_table ");
+        $stmt = $this->db->prepare("SELECT * FROM $this->categories_table ORDER BY cat_id DESC");
         if ($stmt->execute()) {
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
         }

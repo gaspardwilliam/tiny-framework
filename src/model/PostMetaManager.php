@@ -1,76 +1,62 @@
 <?php
 namespace William\Model;
 
-class ImageManager extends Model
+class PostMetaManager extends Model
 {
 
-    public function insert($images, $post_id)
+    public function insert($metas, $post_id)
     {
-        $stmt = $this->db->prepare("INSERT INTO $this->images_table (image_key,image_name,post_id) VALUES (:key,:name,:post_id)");
+        $stmt = $this->db->prepare("INSERT INTO $this->postmeta_table (meta_key,meta_value,post_id) VALUES (:key,:value,:post_id)");
         $stmt->bindParam(':key', $key);
-        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':value', $value);
         $stmt->bindParam(':post_id', $post_id);
 
         $post_id = $post_id;
         // insertion d'une ligne
-        foreach ($images as $image) {
-            $name = $image['name'];
-            $key = $image['key'];
+        foreach ($metas as $meta) {
+            $value = $meta['value'];
+            $key = $meta['key'];
             $stmt->execute();
         }
 
     }
 
-    public function update($images, $post_id)
+    public function update($metas, $post_id)
     {
-        $stmt = $this->db->prepare("SELECT image_id FROM $this->images_table WHERE post_id=?");
+        $stmt = $this->db->prepare("SELECT meta_id FROM $this->postmeta_table WHERE post_id=?");
         $stmt->execute(array($post_id));
 
         if ($stmt->rowCount() > 0) {
-            $stmt = $this->db->prepare("UPDATE $this->images_table SET image_name=:name WHERE image_key=:key AND post_id=:post_id");
+            $stmt = $this->db->prepare("UPDATE $this->postmeta_table SET image_name=:name WHERE image_key=:key AND post_id=:post_id");
             $stmt->bindParam(':key', $key);
             $stmt->bindParam(':name', $name);
             $stmt->bindParam(':post_id', $post_id);
 
             $post_id = $post_id;
             // insertion d'une ligne
-            foreach ($images as $image) {
-                $name = $image['name'];
-                $key = $image['key'];
+            foreach ($metas as $meta) {
+                $value = $meta['value'];
+                $key = $meta['key'];
                 $stmt->execute();
-
             }
         } else {
-            $this->insert($images, $post_id);
+            $this->insert($metas, $post_id);
         }
     }
 
-    /* public function fetchImages($post_id)
-    {
-    $stmt = $this->db->prepare("SELECT * FROM $this->images_table WHERE post_id=?");
-    if ($stmt->execute(array($post_id))) {
-    $images = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    $img = array();
-    foreach ($images as $image) {
-    $img[$image['image_key']] = $image['image_name'];
-    }
-    return $img;
-    }
-    } */
-
-    public function fetchImages($ids)
+    public function fetchMetas($ids)
     {
         // creates a string containing ?,?,?
         $clause = implode(',', array_fill(0, count($ids), '?'));
 
-        $stmt = $this->db->prepare("SELECT * FROM $this->images_table WHERE post_id IN ($clause)");
+        $stmt = $this->db->prepare("SELECT * FROM $this->postmeta_table WHERE post_id IN ($clause)");
 
         //call_user_func_array(array($stmt, 'bindParam'), $ids);
 
         if ($stmt->execute($ids)) {            
             $results=[];
             while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-                $results[$row['post_id']][$row['image_key']] = SITE_URL.$row['image_name'];
+                $results[$row['post_id']][$row['meta_key']] = $row['meta_value'];
             }
             return $results;
         }        
@@ -96,7 +82,7 @@ class ImageManager extends Model
         print_r($array);
     }
 
-    public function delete_img($id)
+    public function delete_metas($id)
     {
         $stmt = $this->db->prepare("SELECT image_name FROM $this->images_table WHERE post_id = ?");
         if ($stmt->execute(array($id))) {

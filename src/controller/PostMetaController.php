@@ -1,10 +1,12 @@
 <?php
 namespace William\Controller;
 
-class CategoryController
+class PostMetaController
 {
     private $id;
-    private $name;
+    private $key;
+    private $value;
+    
 
     // Liste des getters
 
@@ -13,9 +15,14 @@ class CategoryController
         return $this->id;
     }
 
-    public function name()
+    public function key()
     {
-        return $this->name;
+        return $this->key;
+    }
+
+    public function value()
+    {
+        return $this->value;
     }
 
     // Liste des setters
@@ -30,25 +37,27 @@ class CategoryController
         }
     }
 
-    public function setName($name)
+    public function setKey($key)
     {
         // On vérifie qu'il s'agit bien d'une chaîne de caractères.
-        if (is_string($name)) {
-            $this->name = $name;
+        if (is_string($key)) {
+            $this->key = $key;
+        }
+    }
+
+    public function setValue($value)
+    {
+        // On vérifie qu'il s'agit bien d'une chaîne de caractères.
+        if (is_string($value)||empty($value)) {
+            $this->value = $value;
         }
     }
 
     public function hydrate($donnees)
     {
         foreach ($donnees as $key => $value) {
-            // On récupère le nom du setter correspondant à l'attribut.
-            $method = 'set' . ucfirst($key);
-
-            // Si le setter correspondant existe.
-            if (method_exists($this, $method)) {
-                // On appelle le setter.
-                $this->$method($value);
-            }
+            array_push($metas_array, array('key' => 'original',
+                'name' => 'public/img/uploaded_img/' . $handle->file_dst_name));
         }
     }
 

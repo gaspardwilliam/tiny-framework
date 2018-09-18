@@ -21,15 +21,15 @@ class PostManager extends Model
         // insertion d'une ligne
         $title = $post->title();
         $content = $post->content();
-        $slug = slugify($post->title());
+        //$slug = slugify($post->title());
+        $slug = generateSlug($post->title());
         $cat = $post->cat_id();
         $created = $post->created();
         $type = $post->type();
         $updated = $created;
         $stmt->execute();
-        $id = $this->db->lastInsertId();
-        $imgctrl = new ImageController;
-        $imgctrl->image($id, 'insert');
+        return  $this->db->lastInsertId();
+        
     }
 
     public function fetchAll($type)
@@ -37,6 +37,8 @@ class PostManager extends Model
         $stmt = $this->db->prepare("SELECT * FROM $this->posts_table LEFT JOIN $this->categories_table ON alto_posts.cat_id = alto_categories.cat_id WHERE $this->posts_table.post_type=? ORDER BY post_id DESC");
         if ($stmt->execute(array($type))) {
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+           
+
         }
     }
 
@@ -79,6 +81,7 @@ class PostManager extends Model
         $stmt->execute();
         $imgctrl = new ImageController;
         $imgctrl->image($id, 'update');
+        
 
     }
 
@@ -88,13 +91,14 @@ class PostManager extends Model
 
         $imgmanager = new ImageManager;
         $imgmanager->delete_img($id);
-
         $sql2 = "DELETE FROM $this->images_table WHERE post_id=$id";
+        $sql3 = "DELETE FROM $this->postmeta_table WHERE post_id=$id";
 
         // use exec() because no results are returned
         $this->db->exec($sql);
 
         $this->db->exec($sql2);
+        $this->db->exec($sql3);
 
     }
 

@@ -2,78 +2,94 @@
 
 {% block title %}{{title}}{% endblock %}
 {% block head %}
-    {{ parent() }}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simplemde/1.11.2/simplemde.min.css">
-    <style type="text/css">
-    
-    </style>
+{{ parent() }}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simplemde/1.11.2/simplemde.min.css">
+<style type="text/css">
+
+</style>
 {% endblock %}
 {% block content %}
-    <div class="grid-container">
-       <div class="grid-x">
-           <div class="cell">
-               <h1>{{title}}</h1>
-           </div>
-           <div class="cell">
-                <form method="post" enctype="multipart/form-data">                                   
-                    <div class="grid-x grid-margin-x">
-                     
-                      <div class="medium-6 cell">
+<div class="grid-container">
+    <div class="grid-x grid-margin-x">
+        <div class="cell">
+            <h1>{{title}}</h1>
+        </div>
+        <div class="cell">
+            <form method="post" enctype="multipart/form-data">
+                <div class="grid-x grid-margin-x">
+                        {%if images[post.id] %}
+                        <div class="cell">
+                            <div class="card-image">
+                                <img src="{{images[post.id]['thumbnail']}}" alt="">
+                            </div>
+                        </div>
+                        {%endif%}
+
+                    <div class="medium-6 cell">
                         <label>titre
                             <input type="text" name="title" value="{{post.title}}">
                         </label>
-                      </div>
-                                           
-                      <div class="medium-6 cell">
-                            <label>Catégorie
-                                <select name='cat_id'>
-                                    <option value="0">aucune</option>
-                                   {% for category in categories %}                                   
-                                   <option value="{{category.cat_id}}" {%if post.cat_id == category.cat_id %}selected{%endif%}>{{category.cat_name}}</option>
-                                   {% endfor%}                      
-                                </select>
-                            </label>                          
-                      </div>
-                      <div class="medium-6 cell">
-                            {% set image_url=image.getImage(post.id,'thumbnail') %}
-                            {% if image_url %}               
-                                <img src="{{image_url}}">                
-                            {%endif%}
-                      </div>
-                      
                     </div>
-                    <div class="grid-x grid-margin-x">
-                        <div class="medium-6 cell">
-                            <label>contenu
-                                <textarea name="content">{{post.content}}</textarea>
-                            </label>
-                        </div>
-                        {%if post.id%}
-                      <div class="cell">
-                            <a href="{{home~'admin/post/'~post.id~'/delete'}}" class="button small alert">supprimer</a>  
-                      </div>
-                      {%endif%}
-                      <div class="cell">
-                        <label for="image_upload" class="button">image</label>
-                        <input type="file" id="image_upload" class="show-for-sr" name="image">
-                      </div>
-                      <div class="cell">
-                             <input type="submit" class="button">
-                      </div>
+
+                    <div class="medium-6 cell">
+                        <label>url
+                            <input type="text" name="url" value="{{metas[post.id]['url']}}">
+                        </label>
                     </div>
-                </form>
-           </div>           
-       </div>       
+
+                    <div class="medium-6 cell">
+                        <label>media
+                            <input type="text" name="youtube" value="{{metas[post.id]['youtube']}}">
+                        </label>
+                    </div>
+
+                    <div class="medium-6 cell">
+                        <label>Catégorie
+                            <select name='cat_id'>
+                                <option value="0">aucune</option>
+                                {% for category in categories %}
+                                <option value="{{category.cat_id}}" {%if post.cat_id==category.cat_id
+                                    %}selected{%endif%}>{{category.cat_name}}</option>
+                                {% endfor%}
+                            </select>
+                        </label>
+                    </div>  
+                </div>
+
+        </div>
     </div>
+    <div class="grid-x grid-margin-x">
+        <div class="medium-6 cell">
+            <label>contenu
+                <textarea name="content">{{post.content}}</textarea>
+            </label>
+        </div>
+        {%if post.id%}
+        <div class="cell">
+            <a href="{{home~'admin/post/'~post.id~'/delete'}}" class="button small alert">supprimer</a>
+        </div>
+        {%endif%}
+        <div class="cell">
+            <label for="image_upload" class="button">image</label>
+            <input type="file" id="image_upload" class="show-for-sr" name="image">
+        </div>
+        <div class="cell">
+            <input type="submit" class="button">
+        </div>
+    </div>
+    </form>
+</div>
+</div>
+</div>
 {% endblock %}
 {% block scripts %}
-    {{ parent() }}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/simplemde/1.11.2/simplemde.min.js"></script>
-    <script>
-        var simplemde = new SimpleMDE({
-            autoDownloadFontAwesome:false,
-            spellChecker: false,
-            toolbar: [{
+{{ parent() }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/simplemde/1.11.2/simplemde.min.js"></script>
+<script>
+    var simplemde = new SimpleMDE({
+        autoDownloadFontAwesome: false,
+        spellChecker: false,
+        toolbar: [{
                 name: "bold",
                 action: SimpleMDE.toggleBold,
                 className: "fas fa-bold",
@@ -92,8 +108,8 @@
                 className: "fa fa-heading",
                 title: "Bold",
             }
-            
+
         ],
-        });
-    </script>
+    });
+</script>
 {% endblock %}

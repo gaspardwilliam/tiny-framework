@@ -19,17 +19,14 @@
                 </a>
                 <table>
                   <thead>
-                    <tr>
-                      <th width="200">id</th>
-                      <th width="200">Nom</th>
-                      <th width="200">modifier</th>
-                      
+                    <tr>                      
+                      <th width="100">Nom</th>
+                      <th width="200">modifier</th>                      
                     </tr>
                   </thead>
                   <tbody>
                    {%for cat in categories%}
-                    <tr>
-                      <td>{{cat.cat_id}}</td>                      
+                    <tr>                                          
                       <td>{{cat.cat_name}}</td>                      
                       <td><a href="{{home~'admin/category/'~cat.cat_id}}" class="button small">editer</a></td>                      
                     </tr>
