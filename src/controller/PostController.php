@@ -152,12 +152,13 @@ class PostController
         $postmanager=new PostManager;
         $id=$postmanager->create($this);//insert le post et récupere son id
         $imgctrl = new ImageController;
-        $imgctrl->image($id, 'insert');//insert les images
+        $error=$imgctrl->image($id, 'insert');//insert les images
         
         if(!empty($metas)){
             $postmetamanager=new PostMetamanager;
             $postmetamanager->insert($metas,$id);
         }
+        return $error;
 
     }
 
@@ -167,12 +168,14 @@ class PostController
         $postmanager=new PostManager;
         $id=$postmanager->update($this);//met à jour le post et récupere son id
         $imgctrl = new ImageController;
-        $imgctrl->image($this->id(), 'insert');//insert les images
+        $error=$imgctrl->image($this->id(), 'insert');//insert les images
+        
         
         if(!empty($metas)){
             $postmetamanager=new PostMetamanager;
             $postmetamanager->insert($metas,$this->id());
         }
+        return $error;
 
     }
 

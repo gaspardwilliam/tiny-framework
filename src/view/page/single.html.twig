@@ -17,12 +17,16 @@
     <div class="grid-x grid-margin-x grid-margin-y">
         <div class="cell ">
             <h2>{{post.post_title}}</h2>
+            <h3>{{post.post_created_date}}</h3>
             {% if image %}
             <img src="{{image['medium']}}" alt="">
             {% endif %}
             <p>{{post.post_content|markdown}}</p>
             {% if meta['youtube'] %}
-            <p>{{meta['youtube']}}</p>
+            <div class="responsive-embed widescreen">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/{{meta['youtube']}}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+            
             {% endif %}
         </div>
     </div>

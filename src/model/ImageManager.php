@@ -108,4 +108,14 @@ class ImageManager extends Model
         }
     }
 
+    public function check_img($id)
+    {
+        $stmt = $this->db->prepare("SELECT image_name FROM $this->images_table WHERE post_id = ?");
+        if ($stmt->execute(array($id))) {
+           return true;
+            
+        }
+    }
+    
+
 }

@@ -71,7 +71,8 @@ class ImageController
 
     }
 
-    public function image($post_id, $method)//ajoute les images sur le serveur et dans la db
+    public function image($post_id, $method) //ajoute les images sur le serveur et dans la db
+
     {
         $image_array = array();
         $handle = new \Upload($_FILES['image']);
@@ -85,52 +86,59 @@ class ImageController
             $imgmanager = new ImageManager;
             if ($method == "update") {
 
-                if (empty($imgmanager->delete_img($post_id))) {
+                if (empty($imgmanager->check_img($post_id))) {
                     $method = "insert";
                 }
             }
 
             $handle->allowed = array('image/*');
             $handle->Process('public/img/uploaded_img/');
-            array_push($image_array, array('key' => 'original',
-                'name' => 'public/img/uploaded_img/' . $handle->file_dst_name));
+            $error="";
+            if ($handle->processed) {                
+                array_push($image_array, array('key' => 'original',
+                    'name' => 'public/img/uploaded_img/' . $handle->file_dst_name));
 
-            $handle->image_resize = true;
-            $handle->image_ratio_y = true;
-            $handle->image_x = 1024;
-            $handle->file_name_body_add = '_large';
-            $handle->Process('public/img/uploaded_img/');
-            array_push($image_array, array('key' => 'large',
-                'name' => 'public/img/uploaded_img/' . $handle->file_dst_name));
+                $handle->image_resize = true;
+                $handle->image_ratio_y = true;
+                $handle->image_x = 1024;
+                $handle->file_name_body_add = '_large';
+                $handle->Process('public/img/uploaded_img/');
+                array_push($image_array, array('key' => 'large',
+                    'name' => 'public/img/uploaded_img/' . $handle->file_dst_name));
 
-            $handle->image_resize = true;
-            $handle->image_ratio_y = true;
-            $handle->image_x = 300;
-            $handle->file_name_body_add = '_medium';
-            $handle->Process('public/img/uploaded_img/');
-            array_push($image_array, array('key' => 'medium',
-                'name' => 'public/img/uploaded_img/' . $handle->file_dst_name));
+                $handle->image_resize = true;
+                $handle->image_ratio_y = true;
+                $handle->image_x = 300;
+                $handle->file_name_body_add = '_medium';
+                $handle->Process('public/img/uploaded_img/');
+                array_push($image_array, array('key' => 'medium',
+                    'name' => 'public/img/uploaded_img/' . $handle->file_dst_name));
 
-            $handle->image_resize = true;
-            $handle->image_ratio_crop = true;
-            $handle->image_ratio_y = false;
-            $handle->image_y = 150;
-            $handle->image_x = 150;
-            $handle->file_name_body_add = '_thumbnail';
-            $handle->Process('public/img/uploaded_img/');
-            array_push($image_array, array('key' => 'thumbnail',
-                'name' => 'public/img/uploaded_img/' . $handle->file_dst_name));
-            // we check if everything went OK
-            if ($handle->processed) {
+                $handle->image_resize = true;
+                $handle->image_ratio_crop = true;
+                $handle->image_ratio_y = false;
+                $handle->image_y = 150;
+                $handle->image_x = 150;
+                $handle->file_name_body_add = '_thumbnail';
+                $handle->Process('public/img/uploaded_img/');
+                array_push($image_array, array('key' => 'thumbnail',
+                    'name' => 'public/img/uploaded_img/' . $handle->file_dst_name));
+                // we check if everything went OK
+               
 
-                $imgmanager->$method($image_array, $post_id);
-            } else {
+                    $imgmanager->$method($image_array, $post_id);
+                    $imgmanager->delete_img($post_id);
+                    
+                
 
-            }
-            // we delete the temporary files
-            $handle->Clean();
+            }else{
+                return 'l\'image n\'a pas pu etre envoyée sur le serveur';
+                
+                //echo'test p';
+            }$handle->Clean();
+            
 
-        }
+        } 
     }
 
 }

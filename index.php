@@ -3,6 +3,7 @@ require 'vendor/autoload.php';
 require 'vendor/altorouter/altorouter/AltoRouter.php';
 require 'src/config.php';
 require 'src/functions.php';
+
 use William\Model\ImageManager;
 
 use William\Controller\DefaultController;
