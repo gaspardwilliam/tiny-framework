@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  localhost
--- Généré le :  Mer 12 Septembre 2018 à 14:25
+-- Généré le :  Mer 19 Septembre 2018 à 13:48
 -- Version du serveur :  5.7.11
 -- Version de PHP :  7.2.7RC1
 
@@ -31,14 +31,31 @@ CREATE TABLE `alto_categories` (
   `cat_name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
 --
--- Contenu de la table `alto_categories`
+-- Structure de la table `alto_images`
 --
 
-INSERT INTO `alto_categories` (`cat_id`, `cat_name`) VALUES
-(1, 'catÃ©gorie-1'),
-(2, 'catÃ©gorie-2'),
-(3, 'catÃ©gorie-3');
+CREATE TABLE `alto_images` (
+  `image_id` int(11) NOT NULL,
+  `image_key` varchar(255) NOT NULL,
+  `image_name` varchar(255) NOT NULL,
+  `post_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `alto_postmeta`
+--
+
+CREATE TABLE `alto_postmeta` (
+  `meta_id` int(11) NOT NULL,
+  `post_id` int(11) NOT NULL,
+  `meta_key` varchar(255) NOT NULL,
+  `meta_value` longtext
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -88,6 +105,18 @@ ALTER TABLE `alto_categories`
   ADD PRIMARY KEY (`cat_id`);
 
 --
+-- Index pour la table `alto_images`
+--
+ALTER TABLE `alto_images`
+  ADD PRIMARY KEY (`image_id`);
+
+--
+-- Index pour la table `alto_postmeta`
+--
+ALTER TABLE `alto_postmeta`
+  ADD PRIMARY KEY (`meta_id`);
+
+--
 -- Index pour la table `alto_posts`
 --
 ALTER TABLE `alto_posts`
@@ -107,12 +136,22 @@ ALTER TABLE `alto_users`
 -- AUTO_INCREMENT pour la table `alto_categories`
 --
 ALTER TABLE `alto_categories`
-  MODIFY `cat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `cat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+--
+-- AUTO_INCREMENT pour la table `alto_images`
+--
+ALTER TABLE `alto_images`
+  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=277;
+--
+-- AUTO_INCREMENT pour la table `alto_postmeta`
+--
+ALTER TABLE `alto_postmeta`
+  MODIFY `meta_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=135;
 --
 -- AUTO_INCREMENT pour la table `alto_posts`
 --
 ALTER TABLE `alto_posts`
-  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
 --
 -- AUTO_INCREMENT pour la table `alto_users`
 --

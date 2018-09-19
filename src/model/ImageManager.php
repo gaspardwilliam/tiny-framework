@@ -38,6 +38,7 @@ class ImageManager extends Model
                 $name = $image['name'];
                 $key = $image['key'];
                 $stmt->execute();
+               
 
             }
         } else {

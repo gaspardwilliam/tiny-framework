@@ -38,20 +38,20 @@ class DefaultController
     public function posts($slug) //affiche la page des posts d'un type de post
 
     {
-        $key = array_search($slug, array_column($this->posts_type, 'slug')); //récupere l'index du type de post si il existe
+        $key = array_search($slug, array_column($this->posts_type, 'plural_name')); //récupere l'index du type de post si il existe
         if (!empty($key) | $key === 0) { //si le type de post existe dans le tableau
             $postmanager = new PostManager;
             $data = $postmanager->fetchAll($this->posts_type[$key]['singular_name']); //récupérer les posts du type
 
             if ($data) {
                 foreach ($data as $post) {
-                    $ids[] = $post['post_id']; //récupère les ids pour récupérer les images correspondantes
+                    $ids[] = $post['post_id']; //récupère les ids pour récupérer les images et postmeta correspondantes
                 }
 
                 $imagemanager = new ImageManager;
                 $images = $imagemanager->fetchImages($ids); //récupère un tableau avec images des posts
                 $metamanager = new PostMetaManager;
-                $metas = $metamanager->fetchMetas($ids);
+                $metas = $metamanager->fetchMetas($ids);//récupère les metas
 
                 if (file_exists('src/view/page/archive-' . $slug . '.html.twig')) {
                     $name = '-' . $slug;
@@ -77,8 +77,10 @@ class DefaultController
             if ($data) {
                 $imagemanager = new ImageManager;
                 $image = $imagemanager->fetchImages(array($data['post_id']));
+
                 $metamanager = new PostMetaManager;
                 $metas = $metamanager->fetchMetas(array($data['post_id']));
+                
                 if ($data['post_type'] == "page") {
                     if (file_exists('src/view/page/page_' . $data['post_slug'] . '.html.twig')) {
                         $name = 'page-' . $data['post_slug'];
@@ -215,7 +217,8 @@ class DefaultController
                     if (empty($error)) {
                         $key = array_search($data['post_type'], array_column($this->posts_type, 'singular_name'));
                         $url = $this->router->generate('admin_type', array('type' => $this->posts_type[$key]['slug']));
-                        header("Location: $url");}
+                        //header("Location: $url");
+                    }
                 }
             }
             echo $this->twig->render('admin/admin_post_form.html.twig', array('title' => 'modifier', 'post' => $post, 'metas' => $metas, 'categories' => $categories, 'images' => $images, 'error' => $error));

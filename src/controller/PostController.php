@@ -173,7 +173,7 @@ class PostController
         
         if(!empty($metas)){
             $postmetamanager=new PostMetamanager;
-            $postmetamanager->insert($metas,$this->id());
+            $postmetamanager->update($metas,$this->id());
         }
         return $error;
 

@@ -27,9 +27,9 @@ class PostMetaManager extends Model
         $stmt->execute(array($post_id));
 
         if ($stmt->rowCount() > 0) {
-            $stmt = $this->db->prepare("UPDATE $this->postmeta_table SET image_name=:name WHERE image_key=:key AND post_id=:post_id");
+            $stmt = $this->db->prepare("UPDATE $this->postmeta_table SET meta_value=:value WHERE meta_key=:key AND post_id=:post_id");
             $stmt->bindParam(':key', $key);
-            $stmt->bindParam(':name', $name);
+            $stmt->bindParam(':value', $value);
             $stmt->bindParam(':post_id', $post_id);
 
             $post_id = $post_id;
@@ -38,6 +38,7 @@ class PostMetaManager extends Model
                 $value = $meta['value'];
                 $key = $meta['key'];
                 $stmt->execute();
+
             }
         } else {
             $this->insert($metas, $post_id);
@@ -53,13 +54,13 @@ class PostMetaManager extends Model
 
         //call_user_func_array(array($stmt, 'bindParam'), $ids);
 
-        if ($stmt->execute($ids)) {            
-            $results=[];
+        if ($stmt->execute($ids)) {
+            $results = [];
             while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
                 $results[$row['post_id']][$row['meta_key']] = $row['meta_value'];
             }
             return $results;
-        }        
+        }
     }
 
     public function getImage($post_id, $size)
@@ -90,7 +91,7 @@ class PostMetaManager extends Model
             foreach ($images as $image) {
                 unlink($image['image_name']);
             }return true;
-            
+
         }
     }
 
