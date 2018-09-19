@@ -1,3 +1,4 @@
 vendor/
 src/cache
 public/img/uploaded_img
+.vscode
