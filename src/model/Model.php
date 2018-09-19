@@ -10,11 +10,11 @@ class Model
     private $password;
     private $servername;
 
-    protected $posts_table = 'alto_posts';
-    protected $categories_table = 'alto_categories';
-    protected $images_table = 'alto_images';
-    protected $users_table = 'alto_users';
-    protected $postmeta_table = 'alto_postmeta';
+    protected $posts_table = 'tf_posts';
+    protected $categories_table = 'tf_categories';
+    protected $images_table = 'tf_images';
+    protected $users_table = 'tf_users';
+    protected $postmeta_table = 'tf_postmeta';
 
     public function __construct()
     {

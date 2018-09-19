@@ -30,7 +30,7 @@ $twig->addFilter($filter);
 
 //ALTOROUTER
 $router = new AltoRouter();
-$router->setBasePath('/altorouter');
+$router->setBasePath('/tiny_framework');
 
 //  homepage
 $router->map('GET', '/', function () {

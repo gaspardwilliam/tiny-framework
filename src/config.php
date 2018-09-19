@@ -1,11 +1,11 @@
 <?php
 //DB variables
 define('SERVERNAME', 'localhost');
-define('DBNAME', 'alto');
+define('DBNAME', 'tinyframework');
 define('USERNAME', 'root');
 define('PASSWORD', 'root');
 
-define('SITE_URL', '/altorouter/');
+define('SITE_URL', '/tiny_framework/');
 define('SITE_NAME', 'mon site');
 define('ASSETS', SITE_URL.'public/');
 

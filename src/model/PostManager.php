@@ -34,7 +34,7 @@ class PostManager extends Model
 
     public function fetchAll($type)
     {
-        $stmt = $this->db->prepare("SELECT * FROM $this->posts_table LEFT JOIN $this->categories_table ON alto_posts.cat_id = alto_categories.cat_id WHERE $this->posts_table.post_type=? ORDER BY post_id DESC");
+        $stmt = $this->db->prepare("SELECT * FROM $this->posts_table LEFT JOIN $this->categories_table ON $this->posts_table.cat_id = $this->categories_table.cat_id WHERE $this->posts_table.post_type=? ORDER BY post_id DESC");
         if ($stmt->execute(array($type))) {
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
            
@@ -44,7 +44,7 @@ class PostManager extends Model
 
     public function fetchID($id)
     {
-        $stmt = $this->db->prepare("SELECT * FROM $this->posts_table LEFT JOIN $this->categories_table ON alto_posts.cat_id = alto_categories.cat_id WHERE post_id = ?");
+        $stmt = $this->db->prepare("SELECT * FROM $this->posts_table LEFT JOIN $this->categories_table ON $this->posts_table.cat_id = $this->categories_table.cat_id WHERE post_id = ?");
         if ($stmt->execute(array($id))) {
             return $stmt->fetch(\PDO::FETCH_ASSOC);
         }
