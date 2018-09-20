@@ -182,7 +182,7 @@ class PostController
             $postmetamanager=new PostMetamanager;
             $postmetamanager->update($metas,$this->id());
         }
-        return $error;
+        //return $error;
 
     }
 

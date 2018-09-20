@@ -9,7 +9,7 @@ use William\Model\PostManager;
 use William\Model\PostMetaManager;
 use William\Model\UserManager;
 
-require_once 'vendor/verot/class.upload.php/src/class.upload.php';
+
 
 class DefaultController
 {
