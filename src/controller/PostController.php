@@ -141,7 +141,7 @@ class PostController
                 array_push($metas_array, array('key' => $key,
                     'value' => $value));
             }
-        }return $metas_array;pre($this);
+        }return $metas_array;
 
     }
 
@@ -151,14 +151,17 @@ class PostController
 
         $postmanager=new PostManager;
         $id=$postmanager->create($this);//insert le post et récupere son id
-        $imgctrl = new ImageController;
-        $error=$imgctrl->image($id, 'insert');//insert les images
+        if (is_uploaded_file($_FILES['image']['tmp_name'])){
+            $imgctrl = new ImageController;
+            $error=$imgctrl->image($id, 'insert');//insert les images
+        }
         
+        //echo'create';
         if(!empty($metas)){
             $postmetamanager=new PostMetamanager;
             $postmetamanager->insert($metas,$id);
         }
-        return $error;
+        //return $error;
 
     }
 
@@ -167,9 +170,13 @@ class PostController
         
         $postmanager=new PostManager;
         $id=$postmanager->update($this);//met à jour le post et récupere son id
-        $imgctrl = new ImageController;
-        $error=$imgctrl->image($this->id(), 'insert');//insert les images
-        
+
+        if (is_uploaded_file($_FILES['image']['tmp_name'])){
+            $imgctrl = new ImageController;
+            $error=$imgctrl->image($this->id(), 'update');//insert les images
+        }
+       
+        //echo'update';
         
         if(!empty($metas)){
             $postmetamanager=new PostMetamanager;

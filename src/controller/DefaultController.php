@@ -7,7 +7,7 @@ use William\Model\CategoryManager;
 use William\Model\ImageManager;
 use William\Model\PostManager;
 use William\Model\PostMetaManager;
-use William\Model\userManager;
+use William\Model\UserManager;
 
 require_once 'vendor/verot/class.upload.php/src/class.upload.php';
 
@@ -171,7 +171,8 @@ class DefaultController
                     $error = $postctrl->create($_POST);
                     if (empty($error)) {
                         $url = $this->router->generate('admin_type', array('type' => $this->posts_type[$key]['slug']));
-                        header("Location: $url");}
+                        header("Location: $url");
+                    }
                 } else {
                     $postctrl->setTitle($_POST['title']);
                     $postctrl->setContent($_POST['content']);
@@ -217,7 +218,7 @@ class DefaultController
                     if (empty($error)) {
                         $key = array_search($data['post_type'], array_column($this->posts_type, 'singular_name'));
                         $url = $this->router->generate('admin_type', array('type' => $this->posts_type[$key]['slug']));
-                        //header("Location: $url");
+                        header("Location: $url");
                     }
                 }
             }

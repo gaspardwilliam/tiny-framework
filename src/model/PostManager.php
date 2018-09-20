@@ -79,8 +79,8 @@ class PostManager extends Model
         $updated = $post->updated();
         $slug = slugify($post->title());
         $stmt->execute();
-        $imgctrl = new ImageController;
-        $imgctrl->image($id, 'update');
+        /* $imgctrl = new ImageController;
+        $imgctrl->image($id, 'update'); */
         
 
     }
@@ -90,7 +90,7 @@ class PostManager extends Model
         $sql = "DELETE FROM $this->posts_table WHERE post_id=$id";
 
         $imgmanager = new ImageManager;
-        $imgmanager->delete_img($id);
+        $imgmanager->delete_img_post_id($id);//supprime les fichiers images
         $sql2 = "DELETE FROM $this->images_table WHERE post_id=$id";
         $sql3 = "DELETE FROM $this->postmeta_table WHERE post_id=$id";
 
