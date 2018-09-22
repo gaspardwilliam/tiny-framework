@@ -26,6 +26,7 @@
                         <th width="150">mis à jour le</th>
                         <th width="150">catégorie</th>
                         <th width="150">editer</th>
+                        <th width="150">supprimer</th>
                         <th width="">voir</th>
                     </tr>
                 </thead>
@@ -43,6 +44,7 @@
                         {%else%}
                         <td><a href="{{home~post.post_type~'/'~post.post_slug}}" class="button small">voir</a></td>
                         {%endif%}
+                        <td><a href="{{home~'admin/post/'~post.post_id~'/delete'}}" class="button small alert">supprimer</a></td>
                     </tr>
                     {%endfor%}
                 </tbody>

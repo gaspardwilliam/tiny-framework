@@ -9,8 +9,6 @@ use William\Model\PostManager;
 use William\Model\PostMetaManager;
 use William\Model\UserManager;
 
-
-
 class DefaultController
 {
     private $twig;
@@ -38,7 +36,7 @@ class DefaultController
     public function posts($slug) //affiche la page des posts d'un type de post
 
     {
-        $key = array_search($slug, array_column($this->posts_type, 'plural_name')); //récupere l'index du type de post si il existe
+        $key = array_search($slug, array_column($this->posts_type, 'slug')); //récupere l'index du type de post si il existe
         if (!empty($key) | $key === 0) { //si le type de post existe dans le tableau
             $postmanager = new PostManager;
             $data = $postmanager->fetchAll($this->posts_type[$key]['singular_name']); //récupérer les posts du type
@@ -51,7 +49,7 @@ class DefaultController
                 $imagemanager = new ImageManager;
                 $images = $imagemanager->fetchImages($ids); //récupère un tableau avec images des posts
                 $metamanager = new PostMetaManager;
-                $metas = $metamanager->fetchMetas($ids);//récupère les metas
+                $metas = $metamanager->fetchMetas($ids); //récupère les metas
 
                 if (file_exists('src/view/page/archive-' . $slug . '.html.twig')) {
                     $name = '-' . $slug;
@@ -59,7 +57,7 @@ class DefaultController
                     $name = '';
                 }
                 echo $this->twig->render('page/archive' . $name . '.html.twig', array('title' => $slug, 'posts' => $data, 'images' => $images, 'metas' => $metas));
-            }else{
+            } else {
                 echo $this->twig->render('page/404.html.twig', array('title' => 'Aucun articles dans cette section pour le moment'));
             }
         } else {
@@ -77,18 +75,17 @@ class DefaultController
             if ($data) {
                 $imagemanager = new ImageManager;
                 $image = $imagemanager->fetchImages(array($data['post_id']));
-
                 $metamanager = new PostMetaManager;
                 $metas = $metamanager->fetchMetas(array($data['post_id']));
-                
+
                 if ($data['post_type'] == "page") {
-                    if (file_exists('src/view/page/page_' . $data['post_slug'] . '.html.twig')) {
+                    if (file_exists('src/view/page/page-' . $data['post_slug'] . '.html.twig')) {
                         $name = 'page-' . $data['post_slug'];
                     } else {
                         $name = 'page';
                     }
-                } elseif (file_exists('src/view/page/single-' . $data['post_type'] . '.html.twig')) {
-                    $name = 'single-' . $data['post_type'];
+                } elseif (file_exists('src/view/page/single-' . $this->posts_type[$key]['slug'] . '.html.twig')) {
+                    $name = 'single-' . $this->posts_type[$key]['slug'];
                 } else {
                     $name = "single";
                 }
@@ -97,16 +94,18 @@ class DefaultController
                 echo $this->twig->render('page/404.html.twig', array('title' => '404 - l\'article n\'existe pas'));
             }
         } else {
-            echo $this->twig->render('page/404.html.twig', array('title' => '404 no'));
+            echo $this->twig->render('page/404.html.twig', array('title' => '404 - cette section n\'existe pas !'));
         }
     }
 
     public function connect() //affiche le formulaire de connection admin
 
     {
-        $error = array();
         $user = new UserController;
+        $error = array();
+       
         if (!empty($_POST['email']) && !empty($_POST['password'])) {
+           
             $user->setEmail($_POST['email']);
             $user->setPassword($_POST['password']);
             $usermanager = new UserManager;
@@ -146,9 +145,9 @@ class DefaultController
         if (!empty($key) | $key === 0) {
             $postmanager = new PostManager;
             $data = $postmanager->fetchAll($this->posts_type[$key]['singular_name']);
-            echo $this->twig->render('admin/admin_type.html.twig', array('title' => 'administration ' . $slug, 'posts' => $data, 'post_type' => $this->posts_type[$key]['singular_name']));
+            echo $this->twig->render('admin/admin-type.html.twig', array('title' => 'administration ' . $slug, 'posts' => $data, 'post_type' => $this->posts_type[$key]['singular_name']));
         } else {
-            echo $this->twig->render('page/404.html.twig', array('title' => '404'));
+            echo $this->twig->render('page/404.html.twig', array('title' => '404 - ce post type n\'existe pas'));
         }
     }
 
@@ -163,29 +162,31 @@ class DefaultController
             $error = "";
             if ($_POST) {
 
-                if (!empty($_POST['title']) && !empty($_POST['content'])) {
+                if (!empty($_POST['title']) && !empty($_POST['content'])) {                    
                     $postctrl->setType($post_type);
                     if (empty($_POST['cat_id'])) {
                         $postctrl->setCat_id(0);
                     }
-                    $error = $postctrl->create($_POST);
+
+                    $error = $postctrl->create($_POST);/////////////////////////////////////////
                     if (empty($error)) {
                         $url = $this->router->generate('admin_type', array('type' => $this->posts_type[$key]['slug']));
                         header("Location: $url");
                     }
+
                 } else {
                     $postctrl->setTitle($_POST['title']);
                     $postctrl->setContent($_POST['content']);
                 }
             }
-            if (file_exists('src/view/admin/admin_' . $post_type . '_form.html.twig')) {
+            if (file_exists('src/view/admin/admin-' . $post_type . '-form.html.twig')) {
                 $pt = $post_type;
             } else {
                 $pt = 'post';
             }
-            echo $this->twig->render('admin/admin_' . $pt . '_form.html.twig', array('title' => 'créer un/une ' . $post_type, 'post' => $postctrl, 'categories' => $categories, 'error' => $error));
+            echo $this->twig->render('admin/admin-' . $pt . '-form.html.twig', array('title' => 'créer un/une ' . $post_type, 'post' => $postctrl, 'categories' => $categories, 'error' => $error));
         } else {
-            echo $this->twig->render('page/404.html.twig', array('title' => '404'));
+            echo $this->twig->render('page/404.html.twig', array('title' => '404 - ce post type n\'existe pas'));
         }
 
     }
@@ -214,7 +215,8 @@ class DefaultController
             if ($_POST) {
                 /* $post->hydrate($_POST); */
                 if (!empty($_POST['title']) && !empty($_POST['content'])) {
-                    $error = $post->update($_POST);
+                    $error = $post->update($_POST);///////////////
+
                     if (empty($error)) {
                         $key = array_search($data['post_type'], array_column($this->posts_type, 'singular_name'));
                         $url = $this->router->generate('admin_type', array('type' => $this->posts_type[$key]['slug']));
@@ -222,7 +224,7 @@ class DefaultController
                     }
                 }
             }
-            echo $this->twig->render('admin/admin_post_form.html.twig', array('title' => 'modifier', 'post' => $post, 'metas' => $metas, 'categories' => $categories, 'images' => $images, 'error' => $error));
+            echo $this->twig->render('admin/admin-post-form.html.twig', array('title' => 'modifier', 'post' => $post, 'metas' => $metas, 'categories' => $categories, 'images' => $images, 'error' => $error));
         } else {
             echo $this->twig->render('page/404.html.twig', array('title' => 'user', 'post' => $post));
         }
@@ -244,7 +246,7 @@ class DefaultController
     {
         $catmanager = new CategoryManager;
         $data = $catmanager->fetchAll();
-        echo $this->twig->render('admin/admin_categories.html.twig', array('title' => 'Catégories', 'categories' => $data));
+        echo $this->twig->render('admin/admin-categories.html.twig', array('title' => 'Catégories', 'categories' => $data));
     }
 
     public function admin_category_create() //affiche le formulaire de création d'une catégorie
@@ -260,7 +262,7 @@ class DefaultController
                 header("Location: $url");
             }
         }
-        echo $this->twig->render('admin/admin_category_form.html.twig', array('title' => 'créer une catégorie'));
+        echo $this->twig->render('admin/admin-category-form.html.twig', array('title' => 'créer une catégorie'));
     }
 
     public function admin_category_update($id) //affiche le formulaire de mise à jour d'une catégorie
@@ -281,7 +283,7 @@ class DefaultController
                     header("Location: $url");
                 }
             }
-            echo $this->twig->render('admin/admin_category_form.html.twig', array('title' => 'modifier', 'cat' => $cat));
+            echo $this->twig->render('admin/admin-category-form.html.twig', array('title' => 'modifier', 'cat' => $cat));
         } else {
             echo $this->twig->render('page/404.html.twig', array('title' => '404'));
         }

@@ -37,9 +37,7 @@ class UserController
 
         $id = (int) $id;
 
-        // On vérifie ensuite si ce nombre est bien strictement positif.
         if ($id > 0) {
-            // Si c'est le cas, c'est tout bon, on assigne la valeur à l'attribut correspondant.
             $this->id = $id;
         }
     }

@@ -124,18 +124,22 @@ class PostController
 
     }
 
+    /**
+     * hydrate la classe et insere le reste dans dans tableau pour les metas
+     *
+     * @param  array $donnees
+     *
+     * @return array 
+     */
     public function hydrate($donnees)
     {
         
         $metas_array = [];
        
         foreach ($donnees as $key => $value) {
-            // On récupère le nom du setter correspondant à l'attribut.
             
             $method = 'set' . ucfirst($key);
-            // Si le setter correspondant existe.
             if (method_exists($this, $method)) {
-                // On appelle le setter
                 $this->$method($value);
             } else {
                 array_push($metas_array, array('key' => $key,
@@ -145,44 +149,54 @@ class PostController
 
     }
 
+    /**
+     * creer le post dans la db
+     *
+     * @param  array $post
+     *
+     * @return void
+     */
     public function create($post){
         $metas=$this->hydrate($post);
         $this->setCreated(date("Y-m-d H:i:s"));
 
         $postmanager=new PostManager;
-        $id=$postmanager->create($this);//insert le post et récupere son id
+        $id=$postmanager->create($this);
         if (is_uploaded_file($_FILES['image']['tmp_name'])){
             $imgctrl = new ImageController;
-            $error=$imgctrl->image($id, 'insert');//insert les images
+            $error=$imgctrl->image($id, 'insert');
         }
         
-        //echo'create';
         if(!empty($metas)){
             $postmetamanager=new PostMetamanager;
             $postmetamanager->insert($metas,$id);
         }
-        //return $error;
 
     }
 
+    /**
+     * update le post dans la db
+     *
+     * @param  array $post
+     *
+     * @return void
+     */
     public function update($post){
         $metas=$this->hydrate($post);       
         
         $postmanager=new PostManager;
-        $id=$postmanager->update($this);//met à jour le post et récupere son id
+        $id=$postmanager->update($this);
 
         if (is_uploaded_file($_FILES['image']['tmp_name'])){
             $imgctrl = new ImageController;
-            $error=$imgctrl->image($this->id(), 'update');//insert les images
+            $error=$imgctrl->image($this->id(), 'update');
         }
        
-        //echo'update';
         
         if(!empty($metas)){
             $postmetamanager=new PostMetamanager;
             $postmetamanager->update($metas,$this->id());
         }
-        //return $error;
 
     }
 

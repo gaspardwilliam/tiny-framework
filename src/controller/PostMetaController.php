@@ -8,7 +8,6 @@ class PostMetaController
     private $value;
     
 
-    // Liste des getters
 
     public function id()
     {
@@ -25,21 +24,17 @@ class PostMetaController
         return $this->value;
     }
 
-    // Liste des setters
 
     public function setId($id)
     {
         $id = (int) $id;
-        // On vérifie ensuite si ce nombre est bien strictement positif.
         if ($id > 0) {
-            // Si c'est le cas, c'est tout bon, on assigne la valeur à l'attribut correspondant.
             $this->id = $id;
         }
     }
 
     public function setKey($key)
     {
-        // On vérifie qu'il s'agit bien d'une chaîne de caractères.
         if (is_string($key)) {
             $this->key = $key;
         }
@@ -47,7 +42,6 @@ class PostMetaController
 
     public function setValue($value)
     {
-        // On vérifie qu'il s'agit bien d'une chaîne de caractères.
         if (is_string($value)||empty($value)) {
             $this->value = $value;
         }
