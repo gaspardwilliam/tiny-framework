@@ -133,11 +133,12 @@ class ImageController
     public function image($post_id, $method) 
     {
         $name = pathinfo($_FILES['image']['name'], PATHINFO_FILENAME) . '_' . $post_id . '_';
+        $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
         $intervention = new InterventionImage(array('driver' => 'gd'));
         $images_sizes = [
-            array('key' => 'large', 'value' => 1024, 'name' => $name . 'large.jpg'),
-            array('key' => 'medium', 'value' => 600, 'name' => $name . 'medium.jpg'),
-            array('key' => 'thumbnail', 'value' => 200, 'name' => $name . 'thumbnail.jpg'),
+            array('key' => 'large', 'value' => 1024, 'name' => $name . 'large.'.$ext),
+            array('key' => 'medium', 'value' => 600, 'name' => $name . 'medium.'.$ext),
+            array('key' => 'thumbnail', 'value' => 200, 'name' => $name . 'thumbnail.'.$ext),
         ];
         $imgmanager = new ImageManager;
 
